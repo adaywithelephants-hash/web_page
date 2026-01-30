@@ -1,76 +1,269 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wanderlust Tours | ทัวร์คุณภาพ ราคาดี</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>A Day With Elephants | Chiang Mai Elephant Tours</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --gold: #c9a959; --gold-light: #e8d5a3; --dark: #1a1a1a; --darker: #0d0d0d; --cream: #f5f0e6; }
-    body { font-family: Sarabun, sans-serif; background: var(--darker); color: var(--cream); }
+    :root { 
+      --cream: #fdf6ed; 
+      --cream-dark: #f5ebe0;
+      --green: #5a9a3d; 
+      --green-light: #a8d98a;
+      --green-dark: #3d7a2a;
+      --pink: #e91e63;
+      --pink-light: #fce4ec;
+      --text-dark: #333;
+      --yellow: #f9a825;
+    }
+    body { font-family: Poppins, sans-serif; background: var(--cream); color: var(--text-dark); }
     h1, h2, h3 { font-family: Playfair Display, serif; }
+
     .hero {
       min-height: 100vh;
-      background: linear-gradient(135deg, rgba(13,13,13,0.9), rgba(26,26,26,0.8)), url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920) center/cover;
+      background: var(--cream);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: 3rem 2rem;
+    }
+    .hero-title {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: #c4436c;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      font-style: italic;
+      letter-spacing: 4px;
+      font-weight: 400;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      color: #c4436c;
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 6px;
+      font-weight: 400;
+    }
+    .hero-content {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      padding: 2rem;
+      gap: 2rem;
+      max-width: 1100px;
     }
-    .logo { font-size: 1rem; letter-spacing: 8px; color: var(--gold); margin-bottom: 2rem; }
-    .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 400; margin-bottom: 1.5rem; color: var(--cream); }
-    .tagline { font-size: 1.2rem; color: var(--gold-light); margin-bottom: 3rem; }
-    .cta-btn {
-      padding: 1.2rem 3rem;
-      font-size: 1rem;
-      background: transparent;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      cursor: pointer;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-    .cta-btn:hover { background: var(--gold); color: var(--darker); }
-    .tours-section { padding: 5rem 2rem; background: var(--dark); }
-    .section-title { text-align: center; margin-bottom: 3rem; }
-    .section-title h2 { font-size: clamp(1.8rem, 5vw, 2.5rem); color: var(--cream); margin-bottom: 1rem; }
-    .line { width: 60px; height: 1px; background: var(--gold); margin: 0 auto; }
-    .tours-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
-    .tour-card { position: relative; height: 420px; overflow: hidden; border-radius: 8px; }
-    .tour-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .tour-card:hover img { transform: scale(1.05); }
-    .tour-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(13,13,13,0.95), rgba(13,13,13,0.3), transparent);
-      padding: 1.5rem;
+    .hero-left {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 1rem;
     }
-    .tour-card h3 { font-size: 1.5rem; color: var(--cream); margin-bottom: 0.5rem; }
-    .tour-duration { color: var(--gold); font-size: 0.85rem; margin-bottom: 0.8rem; }
-    .tour-highlights { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-    .tour-highlights span { padding: 0.25rem 0.5rem; border: 1px solid rgba(201,169,89,0.3); font-size: 0.75rem; color: var(--gold-light); }
-    .tour-price { font-size: 1.3rem; color: var(--gold); margin-bottom: 1rem; }
-    .book-btn {
-      padding: 0.7rem 1.5rem;
-      background: var(--gold);
-      border: none;
-      color: var(--darker);
+    .leaf { font-size: 1.5rem; }
+    .logo-box {
+      background: var(--green-light);
+      padding: 2rem 2.5rem;
+      border-radius: 20px;
+      position: relative;
+    }
+    .logo-box::before {
+      content: '+';
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.3rem;
+      color: var(--green-dark);
+      font-weight: bold;
+    }
+    .logo-inner {
+      background: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+    }
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .logo-text .icon { color: var(--green-dark); }
+    .logo-text .rantong { color: var(--green-dark); }
+    .logo-text .elephant { color: var(--yellow); }
+    .hero-images {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .hero-images img {
+      width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .section { padding: 4rem 2rem; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .rantong-logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+    .rantong-logo .icon { font-size: 1.8rem; }
+    .rantong-logo .rantong { color: var(--green-dark); }
+    .rantong-logo .elephant { color: var(--yellow); }
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .package-card {
+      background: var(--green-light);
+      padding: 1.8rem;
+      border-radius: 20px;
+      text-align: center;
+    }
+    .package-card.pink { background: var(--pink-light); }
+    .package-card h3 {
+      font-size: 1.25rem;
+      color: var(--text-dark);
+      margin-bottom: 1.2rem;
+      font-family: Poppins, sans-serif;
       font-weight: 600;
+      line-height: 1.3;
+    }
+    .package-card.pink h3 { color: var(--pink); }
+    .package-info {
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .book-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.8rem;
+      background: var(--yellow);
+      border: 2px solid #333;
+      color: #333;
+      font-weight: 600;
+      text-decoration: none;
       cursor: pointer;
       transition: all 0.3s;
       font-size: 0.9rem;
+      font-family: Poppins, sans-serif;
     }
-    .book-btn:hover { background: var(--gold-light); }
+    .book-btn:hover {
+      background: #ffb300;
+      transform: translateY(-2px);
+    }
+    .book-btn.pink {
+      background: var(--pink);
+      border: none;
+      color: white;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+    }
+    .book-btn.pink:hover { background: #c2185b; }
+    .book-btn.pink::after {
+      content: '»';
+      font-size: 1.1rem;
+    }
+
+    .price-includes {
+      max-width: 950px;
+      margin: 2rem auto 0;
+      background: var(--cream-dark);
+      padding: 1.2rem 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .price-includes h4 {
+      color: var(--pink);
+      margin-bottom: 0.4rem;
+      font-size: 1rem;
+      font-family: Poppins, sans-serif;
+    }
+    .price-includes p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #555;
+    }
+
+    .joy-section { background: var(--cream); }
+    .joy-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 2.5rem;
+    }
+    .joy-icon {
+      font-size: 2.5rem;
+    }
+    .joy-text h2 {
+      font-size: 1.4rem;
+      color: var(--pink);
+      font-family: Poppins, sans-serif;
+      font-weight: 600;
+    }
+    .joy-text p {
+      font-size: 0.75rem;
+      color: var(--pink);
+      font-style: italic;
+    }
+
+    .review-section {
+      background: linear-gradient(135deg, #e8d5b7 0%, #f5ebe0 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .review-title {
+      font-family: 'Brush Script MT', cursive;
+      font-size: 3.5rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+    .review-logo {
+      margin-bottom: 2rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .qr-placeholder {
+      width: 180px;
+      height: 180px;
+      background: white;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed #aaa;
+      color: #999;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    .contact-info {
+      font-size: 1rem;
+      color: #333;
+    }
+    .contact-info strong {
+      color: var(--green-dark);
+    }
+
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.8);
       display: none;
       justify-content: center;
       align-items: center;
@@ -79,172 +272,331 @@
     }
     .modal-overlay.active { display: flex; }
     .modal {
-      background: var(--dark);
+      background: var(--cream);
       max-width: 450px;
       width: 100%;
-      padding: 2.5rem;
+      padding: 2rem;
       position: relative;
-      border: 1px solid rgba(201,169,89,0.2);
+      border-radius: 20px;
       max-height: 90vh;
       overflow-y: auto;
-      border-radius: 8px;
     }
-    .modal h2 { font-size: 1.8rem; color: var(--cream); margin-bottom: 0.5rem; }
-    .modal-subtitle { color: var(--gold); margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .modal h2 {
+      font-size: 1.6rem;
+      color: var(--green-dark);
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .modal-subtitle {
+      color: var(--pink);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
     .close-btn {
       position: absolute;
-      top: 1rem;
-      right: 1.2rem;
+      top: 0.8rem;
+      right: 1rem;
       background: none;
       border: none;
-      color: var(--cream);
+      color: #333;
       font-size: 1.8rem;
       cursor: pointer;
-      line-height: 1;
     }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label { display: block; margin-bottom: 0.4rem; color: var(--gold-light); font-size: 0.85rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: var(--green-dark);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 0.9rem;
-      background: var(--darker);
-      border: 1px solid rgba(201,169,89,0.3);
-      color: var(--cream);
-      font-family: Sarabun, sans-serif;
-      font-size: 1rem;
-      border-radius: 4px;
+      padding: 0.8rem;
+      background: white;
+      border: 2px solid #ddd;
+      color: #333;
+      font-family: Poppins, sans-serif;
+      font-size: 0.95rem;
+      border-radius: 8px;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--gold); }
-    .form-group textarea { resize: vertical; min-height: 70px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .form-group textarea { resize: vertical; min-height: 60px; }
     .submit-btn {
       width: 100%;
       padding: 1rem;
-      background: var(--gold);
+      background: var(--green);
       border: none;
-      color: var(--darker);
+      color: white;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 10px;
       margin-top: 0.5rem;
     }
-    .submit-btn:hover { background: var(--gold-light); }
-    .footer { padding: 2.5rem 2rem; text-align: center; background: var(--darker); border-top: 1px solid rgba(201,169,89,0.1); }
-    .footer p { color: var(--gold-light); opacity: 0.6; font-size: 0.9rem; }
+    .submit-btn:hover { background: var(--green-dark); }
+
+    .footer {
+      background: var(--green-dark);
+      color: white;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .footer p { opacity: 0.9; font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .hero-images img { width: 100%; max-width: 320px; }
+      .packages-grid { grid-template-columns: 1fr; }
+      .hero-content { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
+
   <section class="hero">
-    <div class="logo">✦ WANDERLUST TOURS ✦</div>
-    <h1>Explore The World</h1>
-    <p class="tagline">ค้นพบประสบการณ์การเดินทางที่ไม่เหมือนใคร</p>
-    <a href="#tours" class="cta-btn">ดูแพ็กเกจทัวร์</a>
+    <h1 class="hero-title">A DAY IN CHIANGMAI</h1>
+    <h2 class="hero-subtitle">AT...</h2>
+    
+    <div class="hero-content">
+      <div class="hero-left">
+        <span class="leaf">🌿</span>
+        <div class="logo-box">
+          <div class="logo-inner">
+            <span class="logo-text">
+              <span class="icon">🐘</span>
+              <span class="rantong">RANTONG</span>
+              <span class="elephant">ELEPHANT</span>
+            </span>
+          </div>
+        </div>
+        <span class="leaf" style="align-self: flex-end;">🌿</span>
+      </div>
+      
+      <div class="hero-images">
+        <img src="https://images.unsplash.com/photo-1558431382-27e303142255?w=600" alt="Elephant walking">
+        <img src="https://images.unsplash.com/photo-1551522435-a13afa10f103?w=600" alt="Elephant bathing">
+      </div>
+    </div>
   </section>
 
-  <section class="tours-section" id="tours">
-    <div class="section-title">
-      <h2>แพ็กเกจยอดนิยม</h2>
-      <div class="line"></div>
+  <section class="section" id="rantong">
+    <div class="section-header">
+      <span class="rantong-logo">
+        <span class="icon">🐘</span>
+        <span class="rantong">RANTONG</span>
+        <span class="elephant">ELEPHANT</span>
+      </span>
     </div>
     
-    <div class="tours-grid">
-      <div class="tour-card">
-        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800" alt="Japan">
-        <div class="tour-overlay">
-          <h3>Japan Cherry Blossom</h3>
-          <div class="tour-duration">7 วัน 6 คืน</div>
-          <div class="tour-highlights">
-            <span>โตเกียว</span><span>เกียวโต</span><span>โอซาก้า</span><span>ฟูจิ</span>
-          </div>
-          <div class="tour-price">฿59,900 / ท่าน</div>
-          <button class="book-btn" onclick="openModal('Japan Cherry Blossom - ฿59,900')">จองทัวร์นี้</button>
+    <div class="packages-grid">
+      <div class="package-card">
+        <h3>Half Day (Morning)</h3>
+        <div class="package-info">
+          <p><strong>Price:</strong></p>
+          <p>Adult = 1600.- THB Per Person</p>
+          <p>Child = 1000.- THB Per Person</p>
+          <p><strong>Pick up time:</strong></p>
+          <p>07:00 AM – 07:30 AM</p>
+          <p><strong>Back to city:</strong></p>
+          <p>12:30 PM – 01:00 PM</p>
         </div>
+        <button class="book-btn" onclick="openModal('Rantong - Half Day (Morning) - 1600 THB')">Book Now!!</button>
       </div>
 
-      <div class="tour-card">
-        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800" alt="Switzerland">
-        <div class="tour-overlay">
-          <h3>Switzerland Alps</h3>
-          <div class="tour-duration">8 วัน 7 คืน</div>
-          <div class="tour-highlights">
-            <span>ซูริค</span><span>ลูเซิร์น</span><span>อินเทอร์ลาเคน</span><span>เซอร์แมท</span>
-          </div>
-          <div class="tour-price">฿129,900 / ท่าน</div>
-          <button class="book-btn" onclick="openModal('Switzerland Alps - ฿129,900')">จองทัวร์นี้</button>
+      <div class="package-card">
+        <h3>Half Day (Afternoon)</h3>
+        <div class="package-info">
+          <p><strong>Price:</strong></p>
+          <p>Adult = 1600.- THB Per Person</p>
+          <p>Child = 1000.- THB Per Person</p>
+          <p><strong>Pick up time:</strong></p>
+          <p>01:30 PM – 02:00 PM</p>
+          <p><strong>Back to city:</strong></p>
+          <p>06:30 PM – 07:00 PM</p>
         </div>
+        <button class="book-btn" onclick="openModal('Rantong - Half Day (Afternoon) - 1600 THB')">Book Now!!</button>
       </div>
 
-      <div class="tour-card">
-        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800" alt="Maldives">
-        <div class="tour-overlay">
-          <h3>Maldives Paradise</h3>
-          <div class="tour-duration">5 วัน 4 คืน</div>
-          <div class="tour-highlights">
-            <span>รีสอร์ทหรู</span><span>ดำน้ำ</span><span>สปา</span><span>พระอาทิตย์ตก</span>
-          </div>
-          <div class="tour-price">฿45,900 / ท่าน</div>
-          <button class="book-btn" onclick="openModal('Maldives Paradise - ฿45,900')">จองทัวร์นี้</button>
+      <div class="package-card">
+        <h3>Full Day</h3>
+        <div class="package-info">
+          <p><strong>Price:</strong></p>
+          <p>Adult = 2500.- THB Per Person</p>
+          <p>Child = 1500.- THB Per Person</p>
+          <p><strong>Pick up time:</strong></p>
+          <p>07:30 AM – 08:00 AM</p>
+          <p><strong>Back to city:</strong></p>
+          <p>04:00 PM – 04:30 PM</p>
         </div>
+        <button class="book-btn" onclick="openModal('Rantong - Full Day - 2500 THB')">Book Now!!</button>
       </div>
     </div>
+
+    <div class="price-includes">
+      <h4>Price includes:</h4>
+      <p>Transportation round trip Chiang Mai area | Tour Guide | outfit for change | Lunch/Dinner + Drinking water | Bananas to feed the elephants | English speaking tour guide | Insurance. **Child 4-9 years olds</p>
+    </div>
+  </section>
+
+  <section class="section joy-section" id="joy">
+    <div class="joy-header">
+      <span class="joy-icon">🐘</span>
+      <div class="joy-text">
+        <h2>Joy Elephant Sanctuary</h2>
+        <p>Elephant Observation & Cultural Activities</p>
+      </div>
+    </div>
+    
+    <div class="packages-grid">
+      <div class="package-card pink">
+        <h3>Half Day Morning Elephant Observation</h3>
+        <div class="package-info">
+          <p><strong>Price:</strong></p>
+          <p>Adult = 1800.- THB Per Person</p>
+          <p>Child = 1200.- THB Per Person</p>
+          <p><strong>Pick up time:</strong></p>
+          <p>06:30 AM – 07:00 AM</p>
+          <p><strong>Back to city:</strong></p>
+          <p>12:30 PM – 01:00 PM</p>
+        </div>
+        <button class="book-btn pink" onclick="openModal('Joy - Half Day Morning - 1800 THB')">BOOK NOW</button>
+      </div>
+
+      <div class="package-card pink">
+        <h3>Half Day Afternoon Elephant Observation</h3>
+        <div class="package-info">
+          <p><strong>Price:</strong></p>
+          <p>Adult = 1800.- THB Per Person</p>
+          <p>Child = 1200.- THB Per Person</p>
+          <p><strong>Pick up time:</strong></p>
+          <p>12:00 PM – 12:30 PM</p>
+          <p><strong>Back to city:</strong></p>
+          <p>18:30 PM – 19:00 PM</p>
+        </div>
+        <button class="book-btn pink" onclick="openModal('Joy - Half Day Afternoon - 1800 THB')">BOOK NOW</button>
+      </div>
+
+      <div class="package-card pink">
+        <h3>Full Day Afternoon Elephant Observation</h3>
+        <div class="package-info">
+          <p><strong>Price:</strong></p>
+          <p>Adult = 2200.- THB Per Person</p>
+          <p>Child = 1500.- THB Per Person</p>
+          <p><strong>Pick up time:</strong></p>
+          <p>08:00 AM – 08:30 AM</p>
+          <p><strong>Back to city:</strong></p>
+          <p>16:30 PM – 17:00 PM</p>
+        </div>
+        <button class="book-btn pink" onclick="openModal('Joy - Full Day - 2200 THB')">BOOK NOW</button>
+      </div>
+    </div>
+
+    <div class="price-includes">
+      <h4>Price includes:</h4>
+      <p>Transportation round trip Chiang Mai area | Tour Guide | outfit for change | Lunch/Dinner + Drinking water | Bananas to feed the elephants | English speaking tour guide | Insurance. **Child 4-9 years olds</p>
+    </div>
+  </section>
+
+  <section class="review-section" id="review">
+    <h2 class="review-title">Review</h2>
+    <div class="review-logo">
+      <span class="rantong">🐘 RANTONG</span> <span class="elephant">ELEPHANT</span>
+    </div>
+    
+    <div class="qr-placeholder">
+      QR Code<br>Coming Soon
+    </div>
+    
+    <p class="contact-info">More info Call/Line/WhatsApp before 9 pm <strong>+66909962308</strong></p>
   </section>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <button class="close-btn" onclick="closeModal()">×</button>
-      <h2>จองทัวร์</h2>
-      <p class="modal-subtitle">กรอกข้อมูลเพื่อจองทัวร์</p>
+      <h2>Book Your Tour</h2>
+      <p class="modal-subtitle">Fill in your details to book</p>
       
       <form action="https://formspree.io/f/mzdgawqp" method="POST">
         <div class="form-group">
-          <label>ชื่อ-นามสกุล *</label>
+          <label>Full Name *</label>
           <input type="text" name="name" required>
         </div>
         
         <div class="form-group">
-          <label>อีเมล *</label>
+          <label>Email *</label>
           <input type="email" name="email" required>
         </div>
         
         <div class="form-group">
-          <label>เบอร์โทรศัพท์ *</label>
+          <label>Phone / WhatsApp *</label>
           <input type="tel" name="phone" required>
         </div>
         
         <div class="form-group">
-          <label>แพ็กเกจทัวร์ *</label>
+          <label>Tour Package *</label>
           <select name="tour_package" id="tourSelect" required>
-            <option value="">เลือกแพ็กเกจ</option>
-            <option value="Japan Cherry Blossom - ฿59,900">Japan Cherry Blossom - ฿59,900</option>
-            <option value="Switzerland Alps - ฿129,900">Switzerland Alps - ฿129,900</option>
-            <option value="Maldives Paradise - ฿45,900">Maldives Paradise - ฿45,900</option>
+            <option value="">Select Package</option>
+            <optgroup label="Rantong Elephant">
+              <option value="Rantong - Half Day (Morning) - 1600 THB">Half Day Morning - 1600 THB</option>
+              <option value="Rantong - Half Day (Afternoon) - 1600 THB">Half Day Afternoon - 1600 THB</option>
+              <option value="Rantong - Full Day - 2500 THB">Full Day - 2500 THB</option>
+            </optgroup>
+            <optgroup label="Joy Elephant Sanctuary">
+              <option value="Joy - Half Day Morning - 1800 THB">Half Day Morning - 1800 THB</option>
+              <option value="Joy - Half Day Afternoon - 1800 THB">Half Day Afternoon - 1800 THB</option>
+              <option value="Joy - Full Day - 2200 THB">Full Day - 2200 THB</option>
+            </optgroup>
           </select>
         </div>
         
         <div class="form-group">
-          <label>จำนวนผู้เดินทาง</label>
-          <select name="travelers">
-            <option value="1">1 ท่าน</option>
-            <option value="2">2 ท่าน</option>
-            <option value="3">3 ท่าน</option>
-            <option value="4">4 ท่าน</option>
-            <option value="5">5 ท่าน</option>
-            <option value="6+">6+ ท่าน</option>
+          <label>Date of Tour *</label>
+          <input type="date" name="tour_date" required>
+        </div>
+
+        <div class="form-group">
+          <label>Number of Adults</label>
+          <select name="adults">
+            <option value="1">1 Adult</option>
+            <option value="2">2 Adults</option>
+            <option value="3">3 Adults</option>
+            <option value="4">4 Adults</option>
+            <option value="5+">5+ Adults</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Number of Children (4-9 years)</label>
+          <select name="children">
+            <option value="0">0 Children</option>
+            <option value="1">1 Child</option>
+            <option value="2">2 Children</option>
+            <option value="3+">3+ Children</option>
           </select>
         </div>
         
         <div class="form-group">
-          <label>ข้อความเพิ่มเติม</label>
-          <textarea name="message" placeholder="วันที่ต้องการเดินทาง หรือคำถามเพิ่มเติม..."></textarea>
+          <label>Hotel for Pickup</label>
+          <textarea name="hotel" placeholder="Your hotel name and address..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Special Requests</label>
+          <textarea name="message" placeholder="Any questions or requests..."></textarea>
         </div>
         
-        <button type="submit" class="submit-btn">ส่งข้อมูลจอง</button>
+        <button type="submit" class="submit-btn">Submit Booking</button>
       </form>
     </div>
   </div>
 
   <footer class="footer">
-    <p>© 2025 Wanderlust Tours. All rights reserved.</p>
+    <p>© 2025 A Day With Elephants | Chiang Mai, Thailand</p>
+    <p style="margin-top: 0.3rem;">Contact: +66909962308 (Line/WhatsApp)</p>
   </footer>
 
   <script>

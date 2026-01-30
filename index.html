@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wanderlust Tours | ทัวร์คุณภาพ ราคาดี</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --gold: #c9a959; --gold-light: #e8d5a3; --dark: #1a1a1a; --darker: #0d0d0d; --cream: #f5f0e6; }
+    body { font-family: Sarabun, sans-serif; background: var(--darker); color: var(--cream); }
+    h1, h2, h3 { font-family: Playfair Display, serif; }
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(13,13,13,0.9), rgba(26,26,26,0.8)), url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920) center/cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .logo { font-size: 1rem; letter-spacing: 8px; color: var(--gold); margin-bottom: 2rem; }
+    .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 400; margin-bottom: 1.5rem; color: var(--cream); }
+    .tagline { font-size: 1.2rem; color: var(--gold-light); margin-bottom: 3rem; }
+    .cta-btn {
+      padding: 1.2rem 3rem;
+      font-size: 1rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .cta-btn:hover { background: var(--gold); color: var(--darker); }
+    .tours-section { padding: 5rem 2rem; background: var(--dark); }
+    .section-title { text-align: center; margin-bottom: 3rem; }
+    .section-title h2 { font-size: clamp(1.8rem, 5vw, 2.5rem); color: var(--cream); margin-bottom: 1rem; }
+    .line { width: 60px; height: 1px; background: var(--gold); margin: 0 auto; }
+    .tours-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+    .tour-card { position: relative; height: 420px; overflow: hidden; border-radius: 8px; }
+    .tour-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .tour-card:hover img { transform: scale(1.05); }
+    .tour-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13,13,13,0.95), rgba(13,13,13,0.3), transparent);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .tour-card h3 { font-size: 1.5rem; color: var(--cream); margin-bottom: 0.5rem; }
+    .tour-duration { color: var(--gold); font-size: 0.85rem; margin-bottom: 0.8rem; }
+    .tour-highlights { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+    .tour-highlights span { padding: 0.25rem 0.5rem; border: 1px solid rgba(201,169,89,0.3); font-size: 0.75rem; color: var(--gold-light); }
+    .tour-price { font-size: 1.3rem; color: var(--gold); margin-bottom: 1rem; }
+    .book-btn {
+      padding: 0.7rem 1.5rem;
+      background: var(--gold);
+      border: none;
+      color: var(--darker);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+    .book-btn:hover { background: var(--gold-light); }
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--dark);
+      max-width: 450px;
+      width: 100%;
+      padding: 2.5rem;
+      position: relative;
+      border: 1px solid rgba(201,169,89,0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 8px;
+    }
+    .modal h2 { font-size: 1.8rem; color: var(--cream); margin-bottom: 0.5rem; }
+    .modal-subtitle { color: var(--gold); margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 1.8rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; color: var(--gold-light); font-size: 0.85rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--darker);
+      border: 1px solid rgba(201,169,89,0.3);
+      color: var(--cream);
+      font-family: Sarabun, sans-serif;
+      font-size: 1rem;
+      border-radius: 4px;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--gold);
+      border: none;
+      color: var(--darker);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+    .submit-btn:hover { background: var(--gold-light); }
+    .footer { padding: 2.5rem 2rem; text-align: center; background: var(--darker); border-top: 1px solid rgba(201,169,89,0.1); }
+    .footer p { color: var(--gold-light); opacity: 0.6; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="logo">✦ WANDERLUST TOURS ✦</div>
+    <h1>Explore The World</h1>
+    <p class="tagline">ค้นพบประสบการณ์การเดินทางที่ไม่เหมือนใคร</p>
+    <a href="#tours" class="cta-btn">ดูแพ็กเกจทัวร์</a>
+  </section>
+
+  <section class="tours-section" id="tours">
+    <div class="section-title">
+      <h2>แพ็กเกจยอดนิยม</h2>
+      <div class="line"></div>
+    </div>
+    
+    <div class="tours-grid">
+      <div class="tour-card">
+        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800" alt="Japan">
+        <div class="tour-overlay">
+          <h3>Japan Cherry Blossom</h3>
+          <div class="tour-duration">7 วัน 6 คืน</div>
+          <div class="tour-highlights">
+            <span>โตเกียว</span><span>เกียวโต</span><span>โอซาก้า</span><span>ฟูจิ</span>
+          </div>
+          <div class="tour-price">฿59,900 / ท่าน</div>
+          <button class="book-btn" onclick="openModal('Japan Cherry Blossom - ฿59,900')">จองทัวร์นี้</button>
+        </div>
+      </div>
+
+      <div class="tour-card">
+        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800" alt="Switzerland">
+        <div class="tour-overlay">
+          <h3>Switzerland Alps</h3>
+          <div class="tour-duration">8 วัน 7 คืน</div>
+          <div class="tour-highlights">
+            <span>ซูริค</span><span>ลูเซิร์น</span><span>อินเทอร์ลาเคน</span><span>เซอร์แมท</span>
+          </div>
+          <div class="tour-price">฿129,900 / ท่าน</div>
+          <button class="book-btn" onclick="openModal('Switzerland Alps - ฿129,900')">จองทัวร์นี้</button>
+        </div>
+      </div>
+
+      <div class="tour-card">
+        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800" alt="Maldives">
+        <div class="tour-overlay">
+          <h3>Maldives Paradise</h3>
+          <div class="tour-duration">5 วัน 4 คืน</div>
+          <div class="tour-highlights">
+            <span>รีสอร์ทหรู</span><span>ดำน้ำ</span><span>สปา</span><span>พระอาทิตย์ตก</span>
+          </div>
+          <div class="tour-price">฿45,900 / ท่าน</div>
+          <button class="book-btn" onclick="openModal('Maldives Paradise - ฿45,900')">จองทัวร์นี้</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <h2>จองทัวร์</h2>
+      <p class="modal-subtitle">กรอกข้อมูลเพื่อจองทัวร์</p>
+      
+      <form action="https://formspree.io/f/mzdgawqp" method="POST">
+        <div class="form-group">
+          <label>ชื่อ-นามสกุล *</label>
+          <input type="text" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label>อีเมล *</label>
+          <input type="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label>เบอร์โทรศัพท์ *</label>
+          <input type="tel" name="phone" required>
+        </div>
+        
+        <div class="form-group">
+          <label>แพ็กเกจทัวร์ *</label>
+          <select name="tour_package" id="tourSelect" required>
+            <option value="">เลือกแพ็กเกจ</option>
+            <option value="Japan Cherry Blossom - ฿59,900">Japan Cherry Blossom - ฿59,900</option>
+            <option value="Switzerland Alps - ฿129,900">Switzerland Alps - ฿129,900</option>
+            <option value="Maldives Paradise - ฿45,900">Maldives Paradise - ฿45,900</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>จำนวนผู้เดินทาง</label>
+          <select name="travelers">
+            <option value="1">1 ท่าน</option>
+            <option value="2">2 ท่าน</option>
+            <option value="3">3 ท่าน</option>
+            <option value="4">4 ท่าน</option>
+            <option value="5">5 ท่าน</option>
+            <option value="6+">6+ ท่าน</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>ข้อความเพิ่มเติม</label>
+          <textarea name="message" placeholder="วันที่ต้องการเดินทาง หรือคำถามเพิ่มเติม..."></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">ส่งข้อมูลจอง</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 Wanderlust Tours. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function openModal(tourName) {
+      document.getElementById('modal').classList.add('active');
+      document.getElementById('tourSelect').value = tourName;
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
+</body>
+</html>

@@ -14,9 +14,6 @@
       --green: #6b8e5e;
       --green-light: #8faf7e;
       --green-dark: #4a6b3d;
-      --pink: #d4728c;
-      --pink-light: #f5e1e6;
-      --pink-dark: #b85670;
       --gold: #c9a962;
       --text: #3d3d3d;
       --text-light: #6b6b6b;
@@ -29,6 +26,47 @@
       line-height: 1.6;
     }
     h1, h2, h3, h4 { font-family: Cormorant Garamond, serif; font-weight: 600; }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .fade-in-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .scale-in {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .scale-in.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
 
     .nav {
       position: fixed;
@@ -54,9 +92,6 @@
       font-weight: 700;
       color: var(--green-dark);
       text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
     .nav-links {
       display: flex;
@@ -218,19 +253,6 @@
       text-align: center;
       margin-bottom: 3rem;
     }
-    .section-tag {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--green-light);
-      color: white;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      border-radius: 50px;
-      margin-bottom: 1rem;
-    }
-    .section-tag.pink { background: var(--pink); }
     .section-title {
       font-size: clamp(2rem, 5vw, 3rem);
       color: var(--text);
@@ -240,10 +262,12 @@
       font-size: 1rem;
       color: var(--text-light);
       font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
     }
 
-    .rantong-section { background: var(--cream); }
-    .joy-section { background: var(--cream-dark); }
+    .programs-section { background: var(--cream); }
 
     .packages-grid {
       display: grid;
@@ -258,10 +282,17 @@
       overflow: hidden;
       box-shadow: 0 10px 40px rgba(0,0,0,0.08);
       transition: all 0.4s;
+      cursor: pointer;
+      border: 3px solid transparent;
     }
     .package-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      border-color: var(--green);
+    }
+    .package-card.active {
+      border-color: var(--green);
+      box-shadow: 0 20px 50px rgba(107, 142, 94, 0.3);
     }
     .package-header {
       padding: 1.8rem 2rem;
@@ -269,13 +300,9 @@
       color: white;
       text-align: center;
     }
-    .package-card.pink .package-header {
-      background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
-    }
     .package-header h3 {
       font-size: 1.5rem;
       font-weight: 500;
-      margin-bottom: 0.3rem;
     }
     .package-body {
       padding: 2rem;
@@ -291,7 +318,6 @@
       font-weight: 700;
       color: var(--green-dark);
     }
-    .package-card.pink .package-price .amount { color: var(--pink-dark); }
     .package-price .currency {
       font-size: 1rem;
       color: var(--text-light);
@@ -317,16 +343,9 @@
       font-size: 0.95rem;
       border-bottom: 1px dashed #eee;
     }
-    .package-time .time-item:last-child {
-      border-bottom: none;
-    }
-    .package-time .label {
-      color: var(--text-light);
-    }
-    .package-time .value {
-      font-weight: 600;
-      color: var(--text);
-    }
+    .package-time .time-item:last-child { border-bottom: none; }
+    .package-time .label { color: var(--text-light); }
+    .package-time .value { font-weight: 600; color: var(--text); }
     .book-btn {
       display: block;
       width: 100%;
@@ -345,8 +364,65 @@
       background: var(--green-dark);
       transform: scale(1.02);
     }
-    .package-card.pink .book-btn { background: var(--pink); }
-    .package-card.pink .book-btn:hover { background: var(--pink-dark); }
+    .hover-hint {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .program-details {
+      max-width: 1100px;
+      margin: 3rem auto 0;
+      background: white;
+      border-radius: 25px;
+      padding: 3rem;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+      display: none;
+      animation: fadeInDetails 0.5s ease-out;
+    }
+    .program-details.active { display: block; }
+    @keyframes fadeInDetails {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .program-details-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--cream);
+    }
+    .program-details-header h3 {
+      font-size: 2rem;
+      color: var(--green-dark);
+      margin-bottom: 0.5rem;
+    }
+    .program-details-header p {
+      color: var(--text-light);
+    }
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .highlight-item {
+      padding: 1.5rem;
+      background: var(--cream);
+      border-radius: 15px;
+      border-left: 4px solid var(--green);
+    }
+    .highlight-item h4 {
+      font-size: 1.1rem;
+      color: var(--green-dark);
+      margin-bottom: 0.8rem;
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+    }
+    .highlight-item p {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
 
     .price-includes {
       max-width: 1100px;
@@ -356,16 +432,10 @@
       border-radius: 20px;
       text-align: center;
     }
-    .joy-section .price-includes {
-      background: rgba(212, 114, 140, 0.15);
-    }
     .price-includes h4 {
       font-size: 1.3rem;
       color: var(--green-dark);
       margin-bottom: 1.5rem;
-    }
-    .joy-section .price-includes h4 {
-      color: var(--pink-dark);
     }
     .includes-grid {
       display: flex;
@@ -383,43 +453,186 @@
       font-size: 0.85rem;
       color: var(--text);
     }
-    .include-tag span {
-      font-size: 1.1rem;
-    }
+    .include-tag span { font-size: 1.1rem; }
     .includes-note {
       margin-top: 1.5rem;
       font-size: 0.85rem;
       color: var(--text-light);
     }
 
-    .review-section {
+    .reviews-section {
+      background: var(--cream-dark);
+      padding: 5rem 5%;
+    }
+    .reviews-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .tripadvisor-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      margin-bottom: 1rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    .tripadvisor-badge img {
+      height: 30px;
+    }
+    .tripadvisor-badge span {
+      font-weight: 600;
+      color: #00aa6c;
+      font-size: 1.1rem;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .review-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      transition: transform 0.3s;
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+    }
+    .review-stars {
+      display: flex;
+      gap: 0.2rem;
+      margin-bottom: 1rem;
+    }
+    .review-stars span {
+      color: #00aa6c;
+      font-size: 1.2rem;
+    }
+    .review-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .review-content {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+    }
+    .review-author img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .review-author-info h5 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .review-author-info p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .info-section {
+      background: var(--cream);
+      padding: 5rem 5%;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .info-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    }
+    .info-card h3 {
+      font-size: 1.5rem;
+      color: var(--green-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .info-card h3 span {
+      font-size: 1.8rem;
+    }
+    .info-content p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+    .info-content h4 {
+      font-size: 1rem;
+      color: var(--text);
+      margin: 1.5rem 0 0.5rem;
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+    }
+    .info-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .info-content ul li {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .info-content ul li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    .qr-section {
       background: linear-gradient(135deg, #e8dcc8 0%, #f5ebe0 50%, #e8dcc8 100%);
       padding: 5rem 5%;
       text-align: center;
     }
-    .review-container {
-      max-width: 800px;
+    .qr-container {
+      max-width: 700px;
       margin: 0 auto;
       background: white;
-      padding: 4rem 3rem;
+      padding: 3rem;
       border-radius: 30px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.1);
     }
-    .review-title {
+    .qr-title {
       font-family: 'Brush Script MT', 'Segoe Script', cursive;
-      font-size: clamp(4rem, 10vw, 6rem);
+      font-size: clamp(3rem, 8vw, 5rem);
       color: var(--text);
       margin-bottom: 1rem;
-      font-weight: 400;
     }
-    .review-logo {
+    .qr-logo {
       margin-bottom: 2rem;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
     }
-    .review-logo .icon { font-size: 2rem; }
-    .review-logo .rantong { color: var(--green-dark); }
-    .review-logo .elephant { color: #f9a825; }
+    .qr-logo .rantong { color: var(--green-dark); }
+    .qr-logo .elephant { color: #f9a825; }
     .qr-wrapper {
       background: var(--cream);
       padding: 2rem;
@@ -440,18 +653,18 @@
       font-size: 0.9rem;
       border: 2px dashed #ccc;
     }
-    .review-contact {
-      font-size: 1.2rem;
+    .qr-contact {
+      font-size: 1.1rem;
       color: var(--text);
     }
-    .review-contact strong {
+    .qr-contact strong {
       color: var(--green-dark);
-      font-size: 1.4rem;
+      font-size: 1.3rem;
     }
-    .review-contact small {
+    .qr-contact small {
       display: block;
       margin-top: 0.5rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-light);
     }
 
@@ -481,23 +694,10 @@
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.2);
     }
-    .contact-item {
-      text-align: center;
-    }
-    .contact-item span {
-      display: block;
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-    }
-    .contact-item p {
-      margin: 0;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    .contact-item small {
-      font-size: 0.8rem;
-      opacity: 0.8;
-    }
+    .contact-item { text-align: center; }
+    .contact-item span { display: block; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .contact-item p { margin: 0; font-weight: 600; font-size: 1.1rem; }
+    .contact-item small { font-size: 0.8rem; opacity: 0.8; }
 
     .modal-overlay {
       position: fixed;
@@ -647,8 +847,10 @@
       .form-row { grid-template-columns: 1fr; }
       .footer-content { flex-direction: column; text-align: center; }
       .contact-box { flex-direction: column; padding: 1.5rem; }
-      .review-container { padding: 2.5rem 1.5rem; }
-      .qr-placeholder { width: 160px; height: 160px; }
+      .qr-container { padding: 2rem 1.5rem; }
+      .info-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .highlights-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -657,8 +859,8 @@
   <nav class="nav" id="nav">
     <a href="#" class="nav-logo">🐘 A Day in Chiangmai</a>
     <ul class="nav-links">
-      <li><a href="#rantong">Rantong Elephant</a></li>
-      <li><a href="#joy">Joy Sanctuary</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#reviews">Reviews</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -672,20 +874,19 @@
         <span class="rantong">🐘 RANTONG </span><span class="elephant">ELEPHANT</span>
       </div>
       <p class="hero-subtitle">Experience the magic of ethical elephant encounters in the heart of Northern Thailand</p>
-      <a href="#rantong" class="hero-btn">Explore Tours ↓</a>
+      <a href="#programs" class="hero-btn">Explore Programs ↓</a>
     </div>
     <div class="scroll-indicator"><span></span></div>
   </section>
 
-  <section class="section rantong-section" id="rantong">
-    <div class="section-header">
-      <span class="section-tag">Partner Camp</span>
-      <h2 class="section-title">Rantong Elephant</h2>
-      <p class="section-subtitle">Feed, bathe, and walk with elephants in a natural setting</p>
+  <section class="section programs-section" id="programs">
+    <div class="section-header fade-in">
+      <h2 class="section-title">A Day With Elephants</h2>
+      <p class="section-subtitle">Watch them move, graze, and simply exist as they are. There's a quiet kind of beauty here — unhurried, grounding, and deeply real.</p>
     </div>
     
     <div class="packages-grid">
-      <div class="package-card">
+      <div class="package-card fade-in delay-1" data-program="morning" onmouseenter="showDetails('morning')">
         <div class="package-header">
           <h3>Half Day Morning</h3>
         </div>
@@ -706,11 +907,12 @@
               <span class="value">12:30 - 01:00 PM</span>
             </div>
           </div>
-          <button class="book-btn" onclick="openModal('Rantong - Half Day Morning - 1,600 THB')">Book Now</button>
+          <button class="book-btn" onclick="openModal('Half Day Morning - 1,600 THB')">Book Now</button>
+          <p class="hover-hint">Hover to see details ↓</p>
         </div>
       </div>
 
-      <div class="package-card">
+      <div class="package-card fade-in delay-2" data-program="afternoon" onmouseenter="showDetails('afternoon')">
         <div class="package-header">
           <h3>Half Day Afternoon</h3>
         </div>
@@ -731,11 +933,12 @@
               <span class="value">06:30 - 07:00 PM</span>
             </div>
           </div>
-          <button class="book-btn" onclick="openModal('Rantong - Half Day Afternoon - 1,600 THB')">Book Now</button>
+          <button class="book-btn" onclick="openModal('Half Day Afternoon - 1,600 THB')">Book Now</button>
+          <p class="hover-hint">Hover to see details ↓</p>
         </div>
       </div>
 
-      <div class="package-card">
+      <div class="package-card fade-in delay-3" data-program="fullday" onmouseenter="showDetails('fullday')">
         <div class="package-header">
           <h3>Full Day</h3>
         </div>
@@ -756,12 +959,120 @@
               <span class="value">04:00 - 04:30 PM</span>
             </div>
           </div>
-          <button class="book-btn" onclick="openModal('Rantong - Full Day - 2,500 THB')">Book Now</button>
+          <button class="book-btn" onclick="openModal('Full Day - 2,500 THB')">Book Now</button>
+          <p class="hover-hint">Hover to see details ↓</p>
         </div>
       </div>
     </div>
 
-    <div class="price-includes">
+    <div class="program-details" id="details-morning">
+      <div class="program-details-header">
+        <h3>Half Day Morning Program</h3>
+        <p>Step into their world and learn about who they are</p>
+      </div>
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <h4>🐘 Highlights</h4>
+          <p>Step into their world and learn about who they are, where they came from, and how they're looked after — told through a warm, personal introduction.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🍌 Prepare Elephant Food</h4>
+          <p>Mix and shape nutritious treats using fresh fruits and herbs — a special snack made with care.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🤲 Feeding Time</h4>
+          <p>Offer food by hand and share a gentle, close moment together.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🌿 Walk Through Nature</h4>
+          <p>Stroll slowly alongside the elephants through the forest, letting them graze and move at their own pace.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>💦 River Bathing</h4>
+          <p>Join them in the river for a refreshing bath — splash, scrub, and enjoy a joyful, memorable experience.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🍽️ Lunch & Shower</h4>
+          <p>Savor a simple Thai lunch at the sanctuary, with showers available to freshen up after the muddy fun.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="program-details" id="details-afternoon">
+      <div class="program-details-header">
+        <h3>Half Day Afternoon Program</h3>
+        <p>A peaceful evening experience with the elephants</p>
+      </div>
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <h4>🐘 Meet the Elephants & Hear Their Stories</h4>
+          <p>Begin with a warm introduction to the elephants — where they came from, how they've recovered, and how your visit helps care for them moving forward.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🍌 Create Elephant Food by Hand</h4>
+          <p>Shape nutritious vitamin treats from fruits, herbs, and grains. It's hands-on, a little messy, and loved by the elephants.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🤲 Feeding Time</h4>
+          <p>Step in close and offer food by hand, experiencing the gentle touch of their trunks and their calm presence.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🌿 Walk Through Nature</h4>
+          <p>Wander slowly through the forest alongside the elephants, letting them lead the way as they stop, graze, and explore freely.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>💦 Bathing in the River</h4>
+          <p>Share a peaceful river bath together — rinse, scrub, and splash in a moment that feels both joyful and memorable.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🍽️ Lunch/Supper & Shower</h4>
+          <p>Enjoy a comforting Thai meal at the sanctuary, with time to freshen up and relax before the journey back to the city.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="program-details" id="details-fullday">
+      <div class="program-details-header">
+        <h3>Full Day Program</h3>
+        <p>Slow down, breathe deep, and spend a full day surrounded by the rhythm of elephant life</p>
+      </div>
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <h4>✨ Highlight</h4>
+          <p>Walk quietly beside these gentle giants, prepare food with your hands, and share time with them in the river.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🐘 Elephant Welcome & Stories</h4>
+          <p>Begin the day with a gentle introduction, learning about each elephant's journey, where they came from, how they're recovering, and how your presence helps support their care.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🍌 Preparing Elephant Treats</h4>
+          <p>Help create their favorite snacks from bananas, sugarcane, and vitamin-rich mixes, then offer them by hand — a simple, joyful moment of connection.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🌿 Walking Side by Side</h4>
+          <p>No saddles, no chains, no rush. Just a slow walk through forest trails and hillside paths, following as they roam, pause, and explore at their own pace.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🍽️ Lunch in Nature</h4>
+          <p>Enjoy a peaceful Thai meal surrounded by trees, fresh air, and the soft sounds of the jungle. Vegetarian options are available.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>🧴 Herbal Skin Care or Mud Bath</h4>
+          <p>Take part in caring for their skin with a gentle herbal compress or a cooling mud spa. It's calming, playful, and part of their natural routine.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>💦 River Bathing Together</h4>
+          <p>Step into a clear, shallow stream and share a lighthearted bath — washing, splashing, and cooling off together in the flow of the forest.</p>
+        </div>
+        <div class="highlight-item">
+          <h4>☕ Optional Shower & Quiet Time</h4>
+          <p>After the day's activities, freshen up in the shower area, rest for a while, and enjoy a warm cup of tea before returning to Chiang Mai.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="price-includes fade-in">
       <h4>✨ Price Includes</h4>
       <div class="includes-grid">
         <div class="include-tag"><span>🚐</span> Round-trip Transport</div>
@@ -776,110 +1087,118 @@
     </div>
   </section>
 
-  <section class="section joy-section" id="joy">
-    <div class="section-header">
-      <span class="section-tag pink">Sanctuary Experience</span>
-      <h2 class="section-title">Joy Elephant Sanctuary</h2>
-      <p class="section-subtitle">Elephant observation & cultural activities in a peaceful sanctuary</p>
+  <section class="reviews-section" id="reviews">
+    <div class="reviews-header fade-in">
+      <div class="tripadvisor-badge">
+        <span>🦉</span>
+        <span>TripAdvisor</span>
+      </div>
+      <h2 class="section-title">What Our Guests Say</h2>
     </div>
     
-    <div class="packages-grid">
-      <div class="package-card pink">
-        <div class="package-header">
-          <h3>Half Day Morning</h3>
+    <div class="reviews-grid">
+      <div class="review-card fade-in delay-1">
+        <div class="review-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
         </div>
-        <div class="package-body">
-          <div class="package-price">
-            <span class="currency">THB</span>
-            <span class="amount">1,800</span>
-            <span class="per">/ adult</span>
-            <span class="child">Child (4-9 yrs): 1,200 THB</span>
+        <h4 class="review-title">Best experience of our trip!</h4>
+        <p class="review-content">This was absolutely incredible. The elephants were so well cared for, and you could tell they were happy. Walking with them through the forest was magical. The staff were knowledgeable and passionate about what they do.</p>
+        <div class="review-author">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Sarah">
+          <div class="review-author-info">
+            <h5>Sarah M.</h5>
+            <p>Sydney, Australia</p>
           </div>
-          <div class="package-time">
-            <div class="time-item">
-              <span class="label">Pickup</span>
-              <span class="value">06:30 - 07:00 AM</span>
-            </div>
-            <div class="time-item">
-              <span class="label">Return</span>
-              <span class="value">12:30 - 01:00 PM</span>
-            </div>
-          </div>
-          <button class="book-btn" onclick="openModal('Joy - Half Day Morning - 1,800 THB')">Book Now</button>
         </div>
       </div>
 
-      <div class="package-card pink">
-        <div class="package-header">
-          <h3>Half Day Afternoon</h3>
+      <div class="review-card fade-in delay-2">
+        <div class="review-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
         </div>
-        <div class="package-body">
-          <div class="package-price">
-            <span class="currency">THB</span>
-            <span class="amount">1,800</span>
-            <span class="per">/ adult</span>
-            <span class="child">Child (4-9 yrs): 1,200 THB</span>
+        <h4 class="review-title">Ethical and unforgettable</h4>
+        <p class="review-content">Finally found a place that truly respects elephants. No riding, no tricks — just genuine interaction. The river bathing was so much fun! Highly recommend the full day program if you have time.</p>
+        <div class="review-author">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="James">
+          <div class="review-author-info">
+            <h5>James T.</h5>
+            <p>London, UK</p>
           </div>
-          <div class="package-time">
-            <div class="time-item">
-              <span class="label">Pickup</span>
-              <span class="value">12:00 - 12:30 PM</span>
-            </div>
-            <div class="time-item">
-              <span class="label">Return</span>
-              <span class="value">06:30 - 07:00 PM</span>
-            </div>
-          </div>
-          <button class="book-btn" onclick="openModal('Joy - Half Day Afternoon - 1,800 THB')">Book Now</button>
         </div>
       </div>
 
-      <div class="package-card pink">
-        <div class="package-header">
-          <h3>Full Day</h3>
+      <div class="review-card fade-in delay-3">
+        <div class="review-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
         </div>
-        <div class="package-body">
-          <div class="package-price">
-            <span class="currency">THB</span>
-            <span class="amount">2,200</span>
-            <span class="per">/ adult</span>
-            <span class="child">Child (4-9 yrs): 1,500 THB</span>
+        <h4 class="review-title">A must-do in Chiang Mai</h4>
+        <p class="review-content">We did the morning program with our kids and it was perfect. They loved feeding the elephants and learning about them. The pickup was right on time and everything was well organized. Worth every baht!</p>
+        <div class="review-author">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Emma">
+          <div class="review-author-info">
+            <h5>Emma L.</h5>
+            <p>Berlin, Germany</p>
           </div>
-          <div class="package-time">
-            <div class="time-item">
-              <span class="label">Pickup</span>
-              <span class="value">08:00 - 08:30 AM</span>
-            </div>
-            <div class="time-item">
-              <span class="label">Return</span>
-              <span class="value">04:30 - 05:00 PM</span>
-            </div>
-          </div>
-          <button class="book-btn" onclick="openModal('Joy - Full Day - 2,200 THB')">Book Now</button>
         </div>
       </div>
-    </div>
-
-    <div class="price-includes">
-      <h4>✨ Price Includes</h4>
-      <div class="includes-grid">
-        <div class="include-tag"><span>🚐</span> Round-trip Transport</div>
-        <div class="include-tag"><span>🗣️</span> English Guide</div>
-        <div class="include-tag"><span>👕</span> Outfit for Change</div>
-        <div class="include-tag"><span>🍽️</span> Lunch/Dinner</div>
-        <div class="include-tag"><span>💧</span> Drinking Water</div>
-        <div class="include-tag"><span>🍌</span> Bananas for Elephants</div>
-        <div class="include-tag"><span>🛡️</span> Insurance</div>
-      </div>
-      <p class="includes-note">** Child price applies to ages 4-9 years old</p>
     </div>
   </section>
 
-  <section class="review-section" id="review">
-    <div class="review-container">
-      <h2 class="review-title">Review</h2>
-      <div class="review-logo">
-        <span class="icon">🐘</span>
+  <section class="info-section">
+    <div class="info-grid">
+      <div class="info-card fade-in-left">
+        <h3><span>🚐</span> Pick Up Info</h3>
+        <div class="info-content">
+          <p>Free round-trip transfers are provided for hotels located within 5 km of Chiang Mai Old City.</p>
+          <p>Stays outside this area may require a small additional charge.</p>
+          <p>Travel is arranged in comfortable, air-conditioned 12-seat vans inclusive accident insurance.</p>
+        </div>
+      </div>
+
+      <div class="info-card fade-in-right">
+        <h3><span>📋</span> Cancellation Policy</h3>
+        <div class="info-content">
+          <p>We understand that plans can change, and we aim to be as flexible as possible.</p>
+          
+          <h4>Free Cancellation</h4>
+          <ul>
+            <li>Cancel at least 24 hours before your scheduled visit for a full refund.</li>
+          </ul>
+          
+          <h4>Late Cancellation</h4>
+          <ul>
+            <li>Cancellations made less than 24 hours before the program start time will be non-refundable.</li>
+          </ul>
+          
+          <h4>No-Show</h4>
+          <ul>
+            <li>Guests who do not arrive on the scheduled date without notice will be charged 100% of the booking fee.</li>
+          </ul>
+          
+          <h4>Rescheduling</h4>
+          <ul>
+            <li>You may change your date once, free of charge, if requested at least 24 hours in advance and subject to availability.</li>
+          </ul>
+          
+          <h4>Weather Conditions</h4>
+          <ul>
+            <li>In case of severe weather or unsafe conditions, the program may be rescheduled. If rescheduling is not possible, a full refund will be provided.</li>
+          </ul>
+          
+          <h4>How to Cancel or Change</h4>
+          <ul>
+            <li>Please contact us via WhatsApp / Line / Email with your booking name and date.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="qr-section">
+    <div class="qr-container fade-in">
+      <h2 class="qr-title">Review</h2>
+      <div class="qr-logo">
+        <span>🐘</span>
         <span class="rantong">RANTONG </span>
         <span class="elephant">ELEPHANT</span>
       </div>
@@ -888,7 +1207,7 @@
         <div class="qr-placeholder">QR Code</div>
       </div>
       
-      <p class="review-contact">
+      <p class="qr-contact">
         More info Call / Line / WhatsApp<br>
         <strong>+66 90 996 2308</strong>
         <small>Available before 9 PM</small>
@@ -897,19 +1216,21 @@
   </section>
 
   <section class="contact-section" id="contact">
-    <h2>Ready to Meet the Elephants?</h2>
-    <p>Contact us to book your unforgettable experience</p>
-    
-    <div class="contact-box">
-      <div class="contact-item">
-        <span>📞</span>
-        <p>+66 90 996 2308</p>
-        <small>Call or WhatsApp</small>
-      </div>
-      <div class="contact-item">
-        <span>💬</span>
-        <p>Line Available</p>
-        <small>Before 9 PM</small>
+    <div class="fade-in">
+      <h2>Ready to Meet the Elephants?</h2>
+      <p>Contact us to book your unforgettable experience</p>
+      
+      <div class="contact-box">
+        <div class="contact-item">
+          <span>📞</span>
+          <p>+66 90 996 2308</p>
+          <small>Call or WhatsApp</small>
+        </div>
+        <div class="contact-item">
+          <span>💬</span>
+          <p>Line Available</p>
+          <small>Before 9 PM</small>
+        </div>
       </div>
     </div>
   </section>
@@ -941,16 +1262,9 @@
           <label>Tour Package *</label>
           <select name="tour_package" id="tourSelect" required>
             <option value="">Select a package</option>
-            <optgroup label="🐘 Rantong Elephant">
-              <option value="Rantong - Half Day Morning - 1,600 THB">Half Day Morning - 1,600 THB</option>
-              <option value="Rantong - Half Day Afternoon - 1,600 THB">Half Day Afternoon - 1,600 THB</option>
-              <option value="Rantong - Full Day - 2,500 THB">Full Day - 2,500 THB</option>
-            </optgroup>
-            <optgroup label="🌸 Joy Elephant Sanctuary">
-              <option value="Joy - Half Day Morning - 1,800 THB">Half Day Morning - 1,800 THB</option>
-              <option value="Joy - Half Day Afternoon - 1,800 THB">Half Day Afternoon - 1,800 THB</option>
-              <option value="Joy - Full Day - 2,200 THB">Full Day - 2,200 THB</option>
-            </optgroup>
+            <option value="Half Day Morning - 1,600 THB">Half Day Morning - 1,600 THB</option>
+            <option value="Half Day Afternoon - 1,600 THB">Half Day Afternoon - 1,600 THB</option>
+            <option value="Full Day - 2,500 THB">Full Day - 2,500 THB</option>
           </select>
         </div>
         
@@ -1006,8 +1320,8 @@
     <div class="footer-content">
       <div class="footer-logo">🐘 A Day in Chiangmai</div>
       <ul class="footer-links">
-        <li><a href="#rantong">Rantong</a></li>
-        <li><a href="#joy">Joy Sanctuary</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#reviews">Reviews</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
@@ -1025,6 +1339,46 @@
         nav.classList.remove('scrolled');
       }
     });
+
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .scale-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    let activeProgram = null;
+
+    function showDetails(program) {
+      document.querySelectorAll('.program-details').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.querySelectorAll('.package-card').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      const detailsEl = document.getElementById('details-' + program);
+      const cardEl = document.querySelector('[data-program="' + program + '"]');
+      
+      if (detailsEl) {
+        detailsEl.classList.add('active');
+      }
+      if (cardEl) {
+        cardEl.classList.add('active');
+      }
+      
+      activeProgram = program;
+    }
 
     function openModal(tourName) {
       document.getElementById('modal').classList.add('active');
@@ -1044,6 +1398,8 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
+
+    showDetails('morning');
   </script>
 </body>
 </html>

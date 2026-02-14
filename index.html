@@ -503,6 +503,181 @@
       color: var(--text-light);
     }
 
+    .video-banner {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      min-height: 400px;
+      overflow: hidden;
+    }
+    .video-banner video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 50%, rgba(0,0,0,0.5));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3rem 5%;
+      color: white;
+    }
+    .video-banner-overlay h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .video-banner-overlay p {
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 500px;
+    }
+    .video-mute-btn {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+    }
+    .video-mute-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .feature-image-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 500px;
+    }
+    .feature-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .feature-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem;
+      background: var(--cream);
+    }
+    .feature-content h3 {
+      font-size: 2.2rem;
+      color: var(--green-dark);
+      margin-bottom: 1rem;
+    }
+    .feature-content p {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .feature-content .book-btn {
+      width: auto;
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+    }
+
+    .info-with-image {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .info-image {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 100%;
+    }
+    .info-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .info-with-image {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .info-cards-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .info-image {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 100%;
+      min-height: 400px;
+    }
+    .info-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .qr-video-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      align-items: center;
+    }
+    .qr-video {
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+      max-height: 500px;
+    }
+    .qr-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-divider {
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+    }
+    .video-divider video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-testimonial {
+      max-width: 800px;
+      margin: 3rem auto 0;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .video-testimonial video {
+      width: 100%;
+      display: block;
+    }
+    .video-testimonial .gallery-video-wrapper::after {
+      width: 70px;
+      height: 70px;
+      font-size: 1.8rem;
+    }
+
     .gallery-section {
       background: var(--cream-dark);
       padding: 5rem 5%;
@@ -1014,7 +1189,6 @@
       .footer-content { flex-direction: column; text-align: center; }
       .contact-box { flex-direction: column; padding: 1.5rem; }
       .qr-container { padding: 2rem 1.5rem; }
-      .info-grid { grid-template-columns: 1fr; }
       .reviews-grid { grid-template-columns: 1fr; }
       .highlights-grid { grid-template-columns: 1fr; }
       
@@ -1090,6 +1264,42 @@
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
       }
+      
+      .feature-image-section {
+        grid-template-columns: 1fr;
+      }
+      .feature-content {
+        padding: 2rem;
+      }
+      .feature-image {
+        height: 300px;
+      }
+      
+      .info-with-image {
+        grid-template-columns: 1fr;
+      }
+      .info-image {
+        min-height: 300px;
+        order: -1;
+      }
+      
+      .qr-video-grid {
+        grid-template-columns: 1fr;
+      }
+      .qr-video {
+        max-height: 400px;
+        margin: 0 auto;
+        width: 80%;
+      }
+      
+      .video-banner {
+        height: 50vh;
+        min-height: 300px;
+      }
+      
+      .video-divider {
+        height: 200px;
+      }
     }
   </style>
 </head>
@@ -1120,6 +1330,26 @@
       <a href="#programs" class="hero-btn">Explore Programs ↓</a>
     </div>
     <div class="scroll-indicator"><span></span></div>
+  </section>
+
+  <div class="video-banner">
+    <video autoplay loop muted playsinline id="bannerVideo">
+      <source src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v1.mp4" type="video/mp4">
+    </video>
+    <div class="video-banner-overlay">
+      <h3>Experience the Magic</h3>
+      <p>Walk alongside gentle giants in the heart of Northern Thailand</p>
+    </div>
+    <button class="video-mute-btn" onclick="toggleBannerSound()" id="muteBtn">🔇</button>
+  </div>
+
+  <section class="feature-image-section fade-in">
+    <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p8.jpg" alt="Elephant sanctuary" class="feature-image">
+    <div class="feature-content">
+      <h3>More Than Just a Visit</h3>
+      <p>This isn't a tourist attraction — it's a chance to connect. To slow down. To be present with creatures who carry centuries of wisdom in their eyes. Every moment here is a reminder of what it means to respect, protect, and simply be.</p>
+      <button class="book-btn" onclick="openModal('')">Reserve Your Spot</button>
+    </div>
   </section>
 
   <section class="section programs-section" id="programs">
@@ -1465,39 +1695,12 @@
         </div>
       </div>
 
-      <div class="video-row fade-in delay-2">
-        <div class="gallery-item horizontal gallery-video-wrapper" onclick="toggleVideo(this)">
-          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v1.mp4" loop muted playsinline></video>
-        </div>
-        <div class="gallery-item vertical">
-          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p8.jpg" alt="Elephant experience">
-        </div>
-      </div>
-
-      <div class="gallery-row two-horizontal fade-in delay-1">
+      <div class="gallery-row two-horizontal fade-in delay-2">
         <div class="gallery-item">
           <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p9.jpg" alt="Elephant experience">
         </div>
         <div class="gallery-item">
           <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p7.jpg" alt="Elephant experience">
-        </div>
-      </div>
-
-      <div class="video-row fade-in delay-2">
-        <div class="gallery-item horizontal gallery-video-wrapper" onclick="toggleVideo(this)">
-          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v2.mp4" loop muted playsinline></video>
-        </div>
-        <div class="gallery-item vertical gallery-video-wrapper" onclick="toggleVideo(this)">
-          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v4.mp4" loop muted playsinline></video>
-        </div>
-      </div>
-
-      <div class="gallery-row two-horizontal fade-in delay-1">
-        <div class="gallery-item">
-          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p10.jpg" alt="Elephant experience">
-        </div>
-        <div class="gallery-item gallery-video-wrapper" onclick="toggleVideo(this)">
-          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v3.mp4" loop muted playsinline></video>
         </div>
       </div>
     </div>
@@ -1563,83 +1766,105 @@
       </div>
     </div>
     
+    <div class="video-testimonial gallery-video-wrapper fade-in" onclick="toggleVideo(this)">
+      <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v2.mp4" loop muted playsinline></video>
+    </div>
+    
     <div class="section-cta fade-in">
       <button class="book-btn" onclick="openModal('')">Start Your Journey</button>
     </div>
   </section>
 
   <section class="info-section">
-    <div class="info-grid">
-      <div class="info-card fade-in-left">
-        <h3><span>🚐</span> Pick Up Info</h3>
-        <div class="info-content">
-          <ul>
-            <li>Free round-trip transfers are provided for hotels located within 5 km of Chiang Mai Old City.</li>
-            <li>Stays outside this area may require a small additional charge.</li>
-            <li>Travel is arranged in comfortable, air-conditioned 12-seat vans inclusive accident insurance.</li>
-          </ul>
+    <div class="info-with-image">
+      <div class="info-cards-wrapper">
+        <div class="info-card fade-in-left">
+          <h3><span>🚐</span> Pick Up Info</h3>
+          <div class="info-content">
+            <ul>
+              <li>Free round-trip transfers are provided for hotels located within 5 km of Chiang Mai Old City.</li>
+              <li>Stays outside this area may require a small additional charge.</li>
+              <li>Travel is arranged in comfortable, air-conditioned 12-seat vans inclusive accident insurance.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-card fade-in-left delay-1">
+          <h3><span>📋</span> Cancellation Policy</h3>
+          <div class="info-content">
+            <p>We understand that plans can change, and we aim to be as flexible as possible.</p>
+            
+            <h4>Free Cancellation</h4>
+            <ul>
+              <li>Cancel at least 24 hours before your scheduled visit for a full refund.</li>
+            </ul>
+            
+            <h4>Late Cancellation</h4>
+            <ul>
+              <li>Cancellations made less than 24 hours before the program start time will be non-refundable.</li>
+            </ul>
+            
+            <h4>No-Show</h4>
+            <ul>
+              <li>Guests who do not arrive on the scheduled date without notice will be charged 100% of the booking fee.</li>
+            </ul>
+            
+            <h4>Rescheduling</h4>
+            <ul>
+              <li>You may change your date once, free of charge, if requested at least 24 hours in advance and subject to availability.</li>
+            </ul>
+            
+            <h4>Weather Conditions</h4>
+            <ul>
+              <li>In case of severe weather or unsafe conditions, the program may be rescheduled. If rescheduling is not possible, a full refund will be provided.</li>
+            </ul>
+            
+            <h4>How to Cancel or Change</h4>
+            <ul>
+              <li>Please contact us via WhatsApp / Line / Email with your booking name and date.</li>
+            </ul>
+          </div>
         </div>
       </div>
-
-      <div class="info-card fade-in-right">
-        <h3><span>📋</span> Cancellation Policy</h3>
-        <div class="info-content">
-          <p>We understand that plans can change, and we aim to be as flexible as possible.</p>
-          
-          <h4>Free Cancellation</h4>
-          <ul>
-            <li>Cancel at least 24 hours before your scheduled visit for a full refund.</li>
-          </ul>
-          
-          <h4>Late Cancellation</h4>
-          <ul>
-            <li>Cancellations made less than 24 hours before the program start time will be non-refundable.</li>
-          </ul>
-          
-          <h4>No-Show</h4>
-          <ul>
-            <li>Guests who do not arrive on the scheduled date without notice will be charged 100% of the booking fee.</li>
-          </ul>
-          
-          <h4>Rescheduling</h4>
-          <ul>
-            <li>You may change your date once, free of charge, if requested at least 24 hours in advance and subject to availability.</li>
-          </ul>
-          
-          <h4>Weather Conditions</h4>
-          <ul>
-            <li>In case of severe weather or unsafe conditions, the program may be rescheduled. If rescheduling is not possible, a full refund will be provided.</li>
-          </ul>
-          
-          <h4>How to Cancel or Change</h4>
-          <ul>
-            <li>Please contact us via WhatsApp / Line / Email with your booking name and date.</li>
-          </ul>
-        </div>
+      
+      <div class="info-image fade-in-right">
+        <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p10.jpg" alt="Elephant experience">
       </div>
     </div>
   </section>
 
   <section class="qr-section">
-    <div class="qr-container fade-in">
-      <h2 class="qr-title">Review</h2>
-      <div class="qr-logo">
-        <span>🐘</span>
-        <span class="rantong">RANTONG </span>
-        <span class="elephant">ELEPHANT</span>
+    <div class="qr-video-grid">
+      <div class="qr-container fade-in">
+        <h2 class="qr-title">Review</h2>
+        <div class="qr-logo">
+          <span>🐘</span>
+          <span class="rantong">RANTONG </span>
+          <span class="elephant">ELEPHANT</span>
+        </div>
+        
+        <div class="qr-wrapper">
+          <div class="qr-placeholder">QR Code</div>
+        </div>
+        
+        <p class="qr-contact">
+          More info Call / Line / WhatsApp<br>
+          <strong>+66 90 996 2308</strong>
+          <small>Available before 9 PM</small>
+        </p>
       </div>
       
-      <div class="qr-wrapper">
-        <div class="qr-placeholder">QR Code</div>
+      <div class="qr-video fade-in-right gallery-video-wrapper" onclick="toggleVideo(this)">
+        <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v4.mp4" loop muted playsinline></video>
       </div>
-      
-      <p class="qr-contact">
-        More info Call / Line / WhatsApp<br>
-        <strong>+66 90 996 2308</strong>
-        <small>Available before 9 PM</small>
-      </p>
     </div>
   </section>
+
+  <div class="video-divider">
+    <video autoplay loop muted playsinline>
+      <source src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v3.mp4" type="video/mp4">
+    </video>
+  </div>
 
   <section class="contact-section" id="contact">
     <div class="fade-in">
@@ -1855,6 +2080,18 @@
       } else {
         video.pause();
         wrapper.classList.remove('playing');
+      }
+    }
+
+    function toggleBannerSound() {
+      const video = document.getElementById('bannerVideo');
+      const btn = document.getElementById('muteBtn');
+      if (video.muted) {
+        video.muted = false;
+        btn.textContent = '🔊';
+      } else {
+        video.muted = true;
+        btn.textContent = '🔇';
       }
     }
   </script>

@@ -129,15 +129,45 @@
 
     .hero {
       min-height: 100vh;
-      background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.45)), 
-                  url('https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=1920') center/cover fixed;
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       padding: 2rem;
-      position: relative;
+      overflow: hidden;
+    }
+    .hero-slideshow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .hero-slide.active {
+      opacity: 1;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.45));
+      z-index: 1;
     }
     .hero::after {
       content: '';
@@ -471,6 +501,130 @@
       margin-top: 1.5rem;
       font-size: 0.85rem;
       color: var(--text-light);
+    }
+
+    .gallery-section {
+      background: var(--cream-dark);
+      padding: 5rem 5%;
+    }
+    .gallery-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+    }
+    .gallery-row {
+      display: grid;
+      gap: 1rem;
+    }
+    .gallery-row.three-vertical {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .gallery-row.two-horizontal {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+    .gallery-item img, .gallery-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img, .gallery-item:hover video {
+      transform: scale(1.05);
+    }
+    .gallery-row.three-vertical .gallery-item {
+      aspect-ratio: 3/4;
+    }
+    .gallery-row.two-horizontal .gallery-item {
+      aspect-ratio: 16/10;
+    }
+    .gallery-item.vertical {
+      aspect-ratio: 3/4;
+    }
+    .gallery-item.horizontal {
+      aspect-ratio: 16/10;
+    }
+    .gallery-video-wrapper {
+      position: relative;
+    }
+    .gallery-video-wrapper::after {
+      content: '▶';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--green-dark);
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+    .gallery-video-wrapper.playing::after {
+      opacity: 0;
+    }
+    .video-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1rem;
+    }
+    .video-row .gallery-item.horizontal {
+      aspect-ratio: 16/9;
+    }
+    .video-row .gallery-item.vertical {
+      aspect-ratio: 9/16;
+    }
+
+    .floating-book-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 2rem;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: Montserrat, sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(107, 142, 94, 0.4);
+      z-index: 99;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .floating-book-btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(107, 142, 94, 0.5);
+    }
+    .floating-book-btn span {
+      font-size: 1.2rem;
+    }
+
+    .section-cta {
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .section-cta .book-btn {
+      display: inline-block;
+      width: auto;
+      padding: 1rem 3rem;
+      border-radius: 50px;
     }
 
     .reviews-section {
@@ -916,6 +1070,26 @@
       .desktop-only {
         display: none !important;
       }
+      
+      .gallery-row.three-vertical {
+        grid-template-columns: 1fr;
+      }
+      .gallery-row.two-horizontal {
+        grid-template-columns: 1fr;
+      }
+      .video-row {
+        grid-template-columns: 1fr;
+      }
+      .video-row .gallery-item.vertical {
+        aspect-ratio: 3/4;
+      }
+      
+      .floating-book-btn {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -925,12 +1099,19 @@
     <a href="#" class="nav-logo">🐘 A Day in Chiangmai</a>
     <ul class="nav-links">
       <li><a href="#programs">Programs</a></li>
+      <li><a href="#gallery">Gallery</a></li>
       <li><a href="#reviews">Reviews</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
   <section class="hero">
+    <div class="hero-slideshow">
+      <div class="hero-slide active" style="background-image: url('https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p5.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p11.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p12.jpg')"></div>
+    </div>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-badge">Chiang Mai, Thailand</div>
       <h1>A DAY IN CHIANGMAI</h1>
@@ -1251,6 +1432,79 @@
       </div>
       <p class="includes-note">** Child price applies to ages 4-9 years old</p>
     </div>
+    <div class="section-cta fade-in">
+      <button class="book-btn" onclick="openModal('')">Book Your Experience Now</button>
+    </div>
+  </section>
+
+  <section class="gallery-section" id="gallery">
+    <div class="section-header slide-up">
+      <h2 class="section-title">Our Gallery</h2>
+      <p class="section-subtitle">Moments of connection, joy, and unforgettable memories</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-row three-vertical fade-in">
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p1.jpg" alt="Elephant experience">
+        </div>
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p2.jpg" alt="Elephant experience">
+        </div>
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p6.jpg" alt="Elephant experience">
+        </div>
+      </div>
+
+      <div class="gallery-row two-horizontal fade-in delay-1">
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p3.jpg" alt="Elephant experience">
+        </div>
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p4.jpg" alt="Elephant experience">
+        </div>
+      </div>
+
+      <div class="video-row fade-in delay-2">
+        <div class="gallery-item horizontal gallery-video-wrapper" onclick="toggleVideo(this)">
+          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v1.mp4" loop muted playsinline></video>
+        </div>
+        <div class="gallery-item vertical">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p8.jpg" alt="Elephant experience">
+        </div>
+      </div>
+
+      <div class="gallery-row two-horizontal fade-in delay-1">
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p9.jpg" alt="Elephant experience">
+        </div>
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p7.jpg" alt="Elephant experience">
+        </div>
+      </div>
+
+      <div class="video-row fade-in delay-2">
+        <div class="gallery-item horizontal gallery-video-wrapper" onclick="toggleVideo(this)">
+          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v2.mp4" loop muted playsinline></video>
+        </div>
+        <div class="gallery-item vertical gallery-video-wrapper" onclick="toggleVideo(this)">
+          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v4.mp4" loop muted playsinline></video>
+        </div>
+      </div>
+
+      <div class="gallery-row two-horizontal fade-in delay-1">
+        <div class="gallery-item">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p10.jpg" alt="Elephant experience">
+        </div>
+        <div class="gallery-item gallery-video-wrapper" onclick="toggleVideo(this)">
+          <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v3.mp4" loop muted playsinline></video>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-cta fade-in">
+      <button class="book-btn" onclick="openModal('')">Book Your Adventure</button>
+    </div>
   </section>
 
   <section class="reviews-section" id="reviews">
@@ -1307,6 +1561,10 @@
           </div>
         </div>
       </div>
+    </div>
+    
+    <div class="section-cta fade-in">
+      <button class="book-btn" onclick="openModal('')">Start Your Journey</button>
     </div>
   </section>
 
@@ -1403,6 +1661,10 @@
     </div>
   </section>
 
+  <button class="floating-book-btn" onclick="openModal('')">
+    <span>📅</span> Book Now
+  </button>
+
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <button class="close-btn" onclick="closeModal()">×</button>
@@ -1489,6 +1751,7 @@
       <div class="footer-logo">🐘 A Day in Chiangmai</div>
       <ul class="footer-links">
         <li><a href="#programs">Programs</a></li>
+        <li><a href="#gallery">Gallery</a></li>
         <li><a href="#reviews">Reviews</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -1568,6 +1831,32 @@
     });
 
     showDetails('morning');
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    
+    function nextSlide() {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+    
+    setInterval(nextSlide, 5000);
+
+    function toggleVideo(wrapper) {
+      const video = wrapper.querySelector('video');
+      if (video.paused) {
+        document.querySelectorAll('.gallery-video-wrapper video').forEach(v => {
+          v.pause();
+          v.parentElement.classList.remove('playing');
+        });
+        video.play();
+        wrapper.classList.add('playing');
+      } else {
+        video.pause();
+        wrapper.classList.remove('playing');
+      }
+    }
   </script>
 </body>
 </html>

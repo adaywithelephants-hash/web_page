@@ -288,6 +288,20 @@
 
     .programs-section { background: var(--cream); }
 
+    .packages-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .package-wrapper {
+      display: contents;
+    }
+    .program-details-mobile {
+      display: none;
+    }
+
     .packages-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -856,7 +870,6 @@
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
-      .packages-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
       .footer-content { flex-direction: column; text-align: center; }
       .contact-box { flex-direction: column; padding: 1.5rem; }
@@ -864,6 +877,59 @@
       .info-grid { grid-template-columns: 1fr; }
       .reviews-grid { grid-template-columns: 1fr; }
       .highlights-grid { grid-template-columns: 1fr; }
+      
+      .packages-container {
+        grid-template-columns: 1fr;
+      }
+      .package-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .program-details-mobile {
+        display: block;
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      }
+      .program-details-mobile .program-details-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--cream);
+      }
+      .program-details-mobile .program-details-header h3 {
+        font-size: 1.5rem;
+        color: var(--green-dark);
+      }
+      .program-details-mobile .highlights-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .program-details-mobile .highlight-item {
+        padding: 1.2rem;
+        background: var(--cream);
+        border-radius: 12px;
+        border-left: 3px solid var(--green);
+      }
+      .program-details-mobile .highlight-item h4 {
+        font-size: 1rem;
+        color: var(--green-dark);
+        margin-bottom: 0.5rem;
+        font-family: Montserrat, sans-serif;
+        font-weight: 600;
+      }
+      .program-details-mobile .highlight-item p {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        line-height: 1.5;
+      }
+      
+      .desktop-only {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -898,84 +964,194 @@
       <p class="section-subtitle">Watch them move, graze, and simply exist as they are. There's a quiet kind of beauty here — unhurried, grounding, and deeply real.</p>
     </div>
     
-    <div class="packages-grid">
-      <div class="package-card card-reveal delay-1" data-program="morning" onmouseenter="showDetails('morning')">
-        <div class="package-header">
-          <h3>Half Day Morning</h3>
+    <div class="packages-container">
+      <div class="package-wrapper">
+        <div class="package-card card-reveal delay-1" data-program="morning" onmouseenter="showDetails('morning')">
+          <div class="package-header">
+            <h3>Half Day Morning</h3>
+          </div>
+          <div class="package-body">
+            <div class="package-price">
+              <span class="currency">THB</span>
+              <span class="amount">1,600</span>
+              <span class="per">/ adult</span>
+              <span class="child">Child (4-9 yrs): 1,000 THB</span>
+            </div>
+            <div class="package-time">
+              <div class="time-item">
+                <span class="label">Pickup</span>
+                <span class="value">07:00 - 07:30 AM</span>
+              </div>
+              <div class="time-item">
+                <span class="label">Return</span>
+                <span class="value">12:30 - 01:00 PM</span>
+              </div>
+            </div>
+            <button class="book-btn" onclick="openModal('Half Day Morning - 1,600 THB')">Book Now</button>
+          </div>
         </div>
-        <div class="package-body">
-          <div class="package-price">
-            <span class="currency">THB</span>
-            <span class="amount">1,600</span>
-            <span class="per">/ adult</span>
-            <span class="child">Child (4-9 yrs): 1,000 THB</span>
+        
+        <div class="program-details-mobile" id="details-morning-mobile">
+          <div class="program-details-header">
+            <h3>Half Day Morning Program</h3>
           </div>
-          <div class="package-time">
-            <div class="time-item">
-              <span class="label">Pickup</span>
-              <span class="value">07:00 - 07:30 AM</span>
+          <div class="highlights-grid">
+            <div class="highlight-item">
+              <h4>🐘 Highlights</h4>
+              <p>Step into their world and learn about who they are, where they came from, and how they're looked after — told through a warm, personal introduction.</p>
             </div>
-            <div class="time-item">
-              <span class="label">Return</span>
-              <span class="value">12:30 - 01:00 PM</span>
+            <div class="highlight-item">
+              <h4>🍌 Prepare Elephant Food</h4>
+              <p>Mix and shape nutritious treats using fresh fruits and herbs — a special snack made with care.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🤲 Feeding Time</h4>
+              <p>Offer food by hand and share a gentle, close moment together.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🌿 Walk Through Nature</h4>
+              <p>Stroll slowly alongside the elephants through the forest, letting them graze and move at their own pace.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>💦 River Bathing</h4>
+              <p>Join them in the river for a refreshing bath — splash, scrub, and enjoy a joyful, memorable experience.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🍽️ Lunch & Shower</h4>
+              <p>Savor a simple Thai lunch at the sanctuary, with showers available to freshen up after the muddy fun.</p>
             </div>
           </div>
-          <button class="book-btn" onclick="openModal('Half Day Morning - 1,600 THB')">Book Now</button>
         </div>
       </div>
 
-      <div class="package-card card-reveal delay-2" data-program="afternoon" onmouseenter="showDetails('afternoon')">
-        <div class="package-header">
-          <h3>Half Day Afternoon</h3>
+      <div class="package-wrapper">
+        <div class="package-card card-reveal delay-2" data-program="afternoon" onmouseenter="showDetails('afternoon')">
+          <div class="package-header">
+            <h3>Half Day Afternoon</h3>
+          </div>
+          <div class="package-body">
+            <div class="package-price">
+              <span class="currency">THB</span>
+              <span class="amount">1,600</span>
+              <span class="per">/ adult</span>
+              <span class="child">Child (4-9 yrs): 1,000 THB</span>
+            </div>
+            <div class="package-time">
+              <div class="time-item">
+                <span class="label">Pickup</span>
+                <span class="value">01:30 - 02:00 PM</span>
+              </div>
+              <div class="time-item">
+                <span class="label">Return</span>
+                <span class="value">06:30 - 07:00 PM</span>
+              </div>
+            </div>
+            <button class="book-btn" onclick="openModal('Half Day Afternoon - 1,600 THB')">Book Now</button>
+          </div>
         </div>
-        <div class="package-body">
-          <div class="package-price">
-            <span class="currency">THB</span>
-            <span class="amount">1,600</span>
-            <span class="per">/ adult</span>
-            <span class="child">Child (4-9 yrs): 1,000 THB</span>
+        
+        <div class="program-details-mobile" id="details-afternoon-mobile">
+          <div class="program-details-header">
+            <h3>Half Day Afternoon Program</h3>
           </div>
-          <div class="package-time">
-            <div class="time-item">
-              <span class="label">Pickup</span>
-              <span class="value">01:30 - 02:00 PM</span>
+          <div class="highlights-grid">
+            <div class="highlight-item">
+              <h4>🐘 Meet the Elephants & Hear Their Stories</h4>
+              <p>Begin with a warm introduction to the elephants — where they came from, how they've recovered, and how your visit helps care for them moving forward.</p>
             </div>
-            <div class="time-item">
-              <span class="label">Return</span>
-              <span class="value">06:30 - 07:00 PM</span>
+            <div class="highlight-item">
+              <h4>🍌 Create Elephant Food by Hand</h4>
+              <p>Shape nutritious vitamin treats from fruits, herbs, and grains. It's hands-on, a little messy, and loved by the elephants.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🤲 Feeding Time</h4>
+              <p>Step in close and offer food by hand, experiencing the gentle touch of their trunks and their calm presence.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🌿 Walk Through Nature</h4>
+              <p>Wander slowly through the forest alongside the elephants, letting them lead the way as they stop, graze, and explore freely.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>💦 Bathing in the River</h4>
+              <p>Share a peaceful river bath together — rinse, scrub, and splash in a moment that feels both joyful and memorable.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🍽️ Lunch/Supper & Shower</h4>
+              <p>Enjoy a comforting Thai meal at the sanctuary, with time to freshen up and relax before the journey back to the city.</p>
             </div>
           </div>
-          <button class="book-btn" onclick="openModal('Half Day Afternoon - 1,600 THB')">Book Now</button>
         </div>
       </div>
 
-      <div class="package-card card-reveal delay-3" data-program="fullday" onmouseenter="showDetails('fullday')">
-        <div class="package-header">
-          <h3>Full Day</h3>
+      <div class="package-wrapper">
+        <div class="package-card card-reveal delay-3" data-program="fullday" onmouseenter="showDetails('fullday')">
+          <div class="package-header">
+            <h3>Full Day</h3>
+          </div>
+          <div class="package-body">
+            <div class="package-price">
+              <span class="currency">THB</span>
+              <span class="amount">2,500</span>
+              <span class="per">/ adult</span>
+              <span class="child">Child (4-9 yrs): 1,500 THB</span>
+            </div>
+            <div class="package-time">
+              <div class="time-item">
+                <span class="label">Pickup</span>
+                <span class="value">07:30 - 08:00 AM</span>
+              </div>
+              <div class="time-item">
+                <span class="label">Return</span>
+                <span class="value">04:00 - 04:30 PM</span>
+              </div>
+            </div>
+            <button class="book-btn" onclick="openModal('Full Day - 2,500 THB')">Book Now</button>
+          </div>
         </div>
-        <div class="package-body">
-          <div class="package-price">
-            <span class="currency">THB</span>
-            <span class="amount">2,500</span>
-            <span class="per">/ adult</span>
-            <span class="child">Child (4-9 yrs): 1,500 THB</span>
+        
+        <div class="program-details-mobile" id="details-fullday-mobile">
+          <div class="program-details-header">
+            <h3>Full Day Program</h3>
           </div>
-          <div class="package-time">
-            <div class="time-item">
-              <span class="label">Pickup</span>
-              <span class="value">07:30 - 08:00 AM</span>
+          <div class="highlights-grid">
+            <div class="highlight-item">
+              <h4>✨ Highlight</h4>
+              <p>Walk quietly beside these gentle giants, prepare food with your hands, and share time with them in the river.</p>
             </div>
-            <div class="time-item">
-              <span class="label">Return</span>
-              <span class="value">04:00 - 04:30 PM</span>
+            <div class="highlight-item">
+              <h4>🐘 Elephant Welcome & Stories</h4>
+              <p>Begin the day with a gentle introduction, learning about each elephant's journey, where they came from, how they're recovering, and how your presence helps support their care.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🍌 Preparing Elephant Treats</h4>
+              <p>Help create their favorite snacks from bananas, sugarcane, and vitamin-rich mixes, then offer them by hand — a simple, joyful moment of connection.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🌿 Walking Side by Side</h4>
+              <p>No saddles, no chains, no rush. Just a slow walk through forest trails and hillside paths, following as they roam, pause, and explore at their own pace.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🍽️ Lunch in Nature</h4>
+              <p>Enjoy a peaceful Thai meal surrounded by trees, fresh air, and the soft sounds of the jungle. Vegetarian options are available.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>🧴 Herbal Skin Care or Mud Bath</h4>
+              <p>Take part in caring for their skin with a gentle herbal compress or a cooling mud spa. It's calming, playful, and part of their natural routine.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>💦 River Bathing Together</h4>
+              <p>Step into a clear, shallow stream and share a lighthearted bath — washing, splashing, and cooling off together in the flow of the forest.</p>
+            </div>
+            <div class="highlight-item">
+              <h4>☕ Optional Shower & Quiet Time</h4>
+              <p>After the day's activities, freshen up in the shower area, rest for a while, and enjoy a warm cup of tea before returning to Chiang Mai.</p>
             </div>
           </div>
-          <button class="book-btn" onclick="openModal('Full Day - 2,500 THB')">Book Now</button>
         </div>
       </div>
     </div>
 
-    <div class="program-details" id="details-morning">
+    <div class="program-details desktop-only" id="details-morning">
       <div class="program-details-header">
         <h3>Half Day Morning Program</h3>
       </div>
@@ -1007,7 +1183,7 @@
       </div>
     </div>
 
-    <div class="program-details" id="details-afternoon">
+    <div class="program-details desktop-only" id="details-afternoon">
       <div class="program-details-header">
         <h3>Half Day Afternoon Program</h3>
       </div>
@@ -1039,7 +1215,7 @@
       </div>
     </div>
 
-    <div class="program-details" id="details-fullday">
+    <div class="program-details desktop-only" id="details-fullday">
       <div class="program-details-header">
         <h3>Full Day Program</h3>
       </div>

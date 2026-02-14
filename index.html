@@ -534,24 +534,6 @@
       opacity: 0.9;
       max-width: 500px;
     }
-    .video-mute-btn {
-      position: absolute;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: white;
-      font-size: 1.3rem;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
-    }
-    .video-mute-btn:hover {
-      background: rgba(255,255,255,0.3);
-    }
 
     .feature-image-section {
       display: grid;
@@ -672,11 +654,6 @@
       width: 100%;
       display: block;
     }
-    .video-testimonial .gallery-video-wrapper::after {
-      width: 70px;
-      height: 70px;
-      font-size: 1.8rem;
-    }
 
     .gallery-section {
       background: var(--cream-dark);
@@ -724,31 +701,6 @@
     }
     .gallery-item.horizontal {
       aspect-ratio: 16/10;
-    }
-    .gallery-video-wrapper {
-      position: relative;
-    }
-    .gallery-video-wrapper::after {
-      content: '▶';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      background: rgba(255,255,255,0.9);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: var(--green-dark);
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.3s;
-    }
-    .gallery-video-wrapper.playing::after {
-      opacity: 0;
     }
     .video-row {
       display: grid;
@@ -1333,14 +1285,13 @@
   </section>
 
   <div class="video-banner">
-    <video autoplay loop muted playsinline id="bannerVideo">
+    <video autoplay loop muted playsinline>
       <source src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v1.mp4" type="video/mp4">
     </video>
     <div class="video-banner-overlay">
       <h3>Experience the Magic</h3>
       <p>Walk alongside gentle giants in the heart of Northern Thailand</p>
     </div>
-    <button class="video-mute-btn" onclick="toggleBannerSound()" id="muteBtn">🔇</button>
   </div>
 
   <section class="feature-image-section fade-in">
@@ -1766,8 +1717,8 @@
       </div>
     </div>
     
-    <div class="video-testimonial gallery-video-wrapper fade-in" onclick="toggleVideo(this)">
-      <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v2.mp4" loop muted playsinline></video>
+    <div class="video-testimonial fade-in">
+      <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v2.mp4" autoplay loop muted playsinline></video>
     </div>
     
     <div class="section-cta fade-in">
@@ -1854,8 +1805,8 @@
         </p>
       </div>
       
-      <div class="qr-video fade-in-right gallery-video-wrapper" onclick="toggleVideo(this)">
-        <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v4.mp4" loop muted playsinline></video>
+      <div class="qr-video fade-in-right">
+        <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v4.mp4" autoplay loop muted playsinline></video>
       </div>
     </div>
   </section>
@@ -2067,33 +2018,6 @@
     }
     
     setInterval(nextSlide, 5000);
-
-    function toggleVideo(wrapper) {
-      const video = wrapper.querySelector('video');
-      if (video.paused) {
-        document.querySelectorAll('.gallery-video-wrapper video').forEach(v => {
-          v.pause();
-          v.parentElement.classList.remove('playing');
-        });
-        video.play();
-        wrapper.classList.add('playing');
-      } else {
-        video.pause();
-        wrapper.classList.remove('playing');
-      }
-    }
-
-    function toggleBannerSound() {
-      const video = document.getElementById('bannerVideo');
-      const btn = document.getElementById('muteBtn');
-      if (video.muted) {
-        video.muted = false;
-        btn.textContent = '🔊';
-      } else {
-        video.muted = true;
-        btn.textContent = '🔇';
-      }
-    }
   </script>
 </body>
 </html>

@@ -8,18 +8,18 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { 
-      --cream: #FFF4F8;
-      --cream-dark: #EECFCC;
-      --sand: #C6C7B9;
-      --green: #868B77;
-      --green-light: #9DA18F;
-      --green-dark: #6B7062;
-      --pink: #DDB3BD;
-      --pink-light: #FFF4F8;
-      --pink-dark: #C5A9A6;
-      --gold: #B8A078;
-      --text: #4A4A4A;
-      --text-light: #6B6B6B;
+      --cream: #FAF9F7;
+      --cream-dark: #F0EBE8;
+      --sand: #E8E3DD;
+      --green: #8B9A7D;
+      --green-light: #A8B59C;
+      --green-dark: #6E7D62;
+      --pink: #D4B5B0;
+      --pink-light: #F5EFED;
+      --pink-dark: #B89B95;
+      --gold: #C4B098;
+      --text: #4A4744;
+      --text-light: #7A7572;
     }
     html { scroll-behavior: smooth; }
     body { 
@@ -453,7 +453,7 @@
     }
     .highlight-item {
       padding: 1.5rem;
-      background: var(--cream);
+      background: var(--pink-light);
       border-radius: 15px;
       border-left: 4px solid var(--green);
     }
@@ -473,14 +473,14 @@
     .price-includes {
       max-width: 1100px;
       margin: 3rem auto 0;
-      background: var(--cream-dark);
+      background: var(--pink-light);
       padding: 2rem;
       border-radius: 20px;
       text-align: center;
     }
     .price-includes h4 {
       font-size: 1.3rem;
-      color: var(--pink-dark);
+      color: var(--green-dark);
       margin-bottom: 1.5rem;
     }
     .includes-grid {
@@ -554,7 +554,7 @@
       flex-direction: column;
       justify-content: center;
       padding: 4rem;
-      background: var(--pink-light);
+      background: var(--cream-dark);
     }
     .feature-content h3 {
       font-size: 2.2rem;
@@ -649,7 +649,7 @@
     }
 
     .gallery-section {
-      background: var(--sand);
+      background: var(--cream-dark);
       padding: 5rem 5%;
     }
     .gallery-grid {
@@ -720,7 +720,7 @@
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(134, 139, 119, 0.4);
+      box-shadow: 0 10px 30px rgba(139, 154, 125, 0.4);
       z-index: 99;
       transition: all 0.3s;
       display: flex;
@@ -730,7 +730,7 @@
     .floating-book-btn:hover {
       background: var(--green-dark);
       transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(134, 139, 119, 0.5);
+      box-shadow: 0 15px 40px rgba(139, 154, 125, 0.5);
     }
     .floating-book-btn span {
       font-size: 1.2rem;
@@ -770,7 +770,7 @@
     }
     .tripadvisor-badge span {
       font-weight: 600;
-      color: var(--green-dark);
+      color: var(--green);
       font-size: 1.1rem;
     }
     .reviews-grid {
@@ -796,7 +796,7 @@
       margin-bottom: 1rem;
     }
     .review-stars span {
-      color: var(--pink-dark);
+      color: var(--gold);
       font-size: 1.2rem;
     }
     .review-title {
@@ -835,7 +835,7 @@
     }
 
     .info-section {
-      background: var(--cream);
+      background: var(--pink-light);
       padding: 5rem 5%;
     }
     .info-grid {
@@ -895,7 +895,7 @@
     }
 
     .qr-section {
-      background: linear-gradient(135deg, var(--sand) 0%, var(--cream) 50%, var(--sand) 100%);
+      background: linear-gradient(135deg, var(--cream-dark) 0%, var(--cream) 50%, var(--cream-dark) 100%);
       padding: 5rem 5%;
       text-align: center;
     }
@@ -918,7 +918,7 @@
       font-size: 1.6rem;
       font-weight: 700;
     }
-    .qr-logo .rantong { color: var(--green-dark); }
+    .qr-logo .rantong { color: var(--green); }
     .qr-logo .elephant { color: var(--pink-dark); }
     .qr-wrapper {
       background: var(--cream);
@@ -956,7 +956,7 @@
     }
 
     .contact-section {
-      background: linear-gradient(135deg, var(--green-dark) 0%, #5A5F4F 100%);
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
       padding: 4rem 5%;
       text-align: center;
       color: white;
@@ -1085,11 +1085,11 @@
     }
     .submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(134, 139, 119, 0.4);
+      box-shadow: 0 10px 30px rgba(139, 154, 125, 0.4);
     }
 
     .footer {
-      background: var(--text);
+      background: var(--green-dark);
       color: white;
       padding: 3rem 5% 2rem;
     }

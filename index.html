@@ -8,15 +8,18 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { 
-      --cream: #faf6f0;
-      --cream-dark: #f0e6d8;
-      --sand: #e8dcc8;
-      --green: #6b8e5e;
-      --green-light: #8faf7e;
-      --green-dark: #4a6b3d;
-      --gold: #c9a962;
-      --text: #3d3d3d;
-      --text-light: #6b6b6b;
+      --cream: #EBDDDD;
+      --cream-dark: #EECFCC;
+      --sand: #C6C7B9;
+      --green: #868B77;
+      --green-light: #9DA18F;
+      --green-dark: #6B7062;
+      --pink: #DDB3BD;
+      --pink-light: #EBDDDD;
+      --pink-dark: #C5A9A6;
+      --gold: #B8A078;
+      --text: #4A4A4A;
+      --text-light: #6B6B6B;
     }
     html { scroll-behavior: smooth; }
     body { 
@@ -218,11 +221,11 @@
       letter-spacing: 5px;
     }
     .hero-subtitle {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.9);
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.95);
       max-width: 500px;
       margin: 2rem auto 2.5rem;
-      font-weight: 300;
+      font-weight: 500;
     }
     .hero-btn {
       display: inline-flex;
@@ -470,14 +473,14 @@
     .price-includes {
       max-width: 1100px;
       margin: 3rem auto 0;
-      background: var(--sand);
+      background: var(--cream-dark);
       padding: 2rem;
       border-radius: 20px;
       text-align: center;
     }
     .price-includes h4 {
       font-size: 1.3rem;
-      color: var(--green-dark);
+      color: var(--pink-dark);
       margin-bottom: 1.5rem;
     }
     .includes-grid {
@@ -530,9 +533,10 @@
       margin-bottom: 0.5rem;
     }
     .video-banner-overlay p {
-      font-size: 1rem;
-      opacity: 0.9;
+      font-size: 1.1rem;
+      opacity: 0.95;
       max-width: 500px;
+      font-weight: 500;
     }
 
     .feature-image-section {
@@ -550,7 +554,7 @@
       flex-direction: column;
       justify-content: center;
       padding: 4rem;
-      background: var(--cream);
+      background: var(--pink-light);
     }
     .feature-content h3 {
       font-size: 2.2rem;
@@ -645,7 +649,7 @@
     }
 
     .gallery-section {
-      background: var(--cream-dark);
+      background: var(--sand);
       padding: 5rem 5%;
     }
     .gallery-grid {
@@ -716,7 +720,7 @@
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(107, 142, 94, 0.4);
+      box-shadow: 0 10px 30px rgba(134, 139, 119, 0.4);
       z-index: 99;
       transition: all 0.3s;
       display: flex;
@@ -726,7 +730,7 @@
     .floating-book-btn:hover {
       background: var(--green-dark);
       transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(107, 142, 94, 0.5);
+      box-shadow: 0 15px 40px rgba(134, 139, 119, 0.5);
     }
     .floating-book-btn span {
       font-size: 1.2rem;
@@ -744,7 +748,7 @@
     }
 
     .reviews-section {
-      background: var(--cream-dark);
+      background: var(--cream);
       padding: 5rem 5%;
     }
     .reviews-header {
@@ -766,7 +770,7 @@
     }
     .tripadvisor-badge span {
       font-weight: 600;
-      color: #00aa6c;
+      color: var(--green-dark);
       font-size: 1.1rem;
     }
     .reviews-grid {
@@ -792,7 +796,7 @@
       margin-bottom: 1rem;
     }
     .review-stars span {
-      color: #00aa6c;
+      color: var(--pink-dark);
       font-size: 1.2rem;
     }
     .review-title {
@@ -891,7 +895,7 @@
     }
 
     .qr-section {
-      background: linear-gradient(135deg, #e8dcc8 0%, #f5ebe0 50%, #e8dcc8 100%);
+      background: linear-gradient(135deg, var(--sand) 0%, var(--cream) 50%, var(--sand) 100%);
       padding: 5rem 5%;
       text-align: center;
     }
@@ -915,7 +919,7 @@
       font-weight: 700;
     }
     .qr-logo .rantong { color: var(--green-dark); }
-    .qr-logo .elephant { color: #f9a825; }
+    .qr-logo .elephant { color: var(--pink-dark); }
     .qr-wrapper {
       background: var(--cream);
       padding: 2rem;
@@ -952,7 +956,7 @@
     }
 
     .contact-section {
-      background: linear-gradient(135deg, var(--green-dark) 0%, #3d5a31 100%);
+      background: linear-gradient(135deg, var(--green-dark) 0%, #5A5F4F 100%);
       padding: 4rem 5%;
       text-align: center;
       color: white;
@@ -1081,7 +1085,7 @@
     }
     .submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(107, 142, 94, 0.4);
+      box-shadow: 0 10px 30px rgba(134, 139, 119, 0.4);
     }
 
     .footer {
@@ -1589,7 +1593,7 @@
       <h4>✨ Price Includes</h4>
       <div class="includes-grid">
         <div class="include-tag"><span>🚐</span> Round-trip Transport</div>
-        <div class="include-tag"><span>🗣️</span> English Guide</div>
+        <div class="include-tag"><span>🗣️</span> English / Chinese Speaking Guide</div>
         <div class="include-tag"><span>👕</span> Outfit for Change</div>
         <div class="include-tag"><span>🍽️</span> Lunch/Dinner</div>
         <div class="include-tag"><span>💧</span> Drinking Water</div>

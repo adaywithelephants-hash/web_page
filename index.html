@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A Day in Chiangmai | Elephant Tours</title>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -114,6 +115,21 @@
       font-weight: 700;
       color: var(--brown);
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+    .inline-logo {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      vertical-align: middle;
+      margin-right: 0.3rem;
     }
     .nav-links {
       display: flex;
@@ -763,6 +779,22 @@
       background: var(--cream);
       padding: 5rem 5%;
     }
+
+    .guest-reviews-section {
+      background: var(--cream-dark);
+      padding: 5rem 5%;
+    }
+    .guest-reviews-section .reviews-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .guest-reviews-section .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
     .reviews-header {
       text-align: center;
       margin-bottom: 3rem;
@@ -1012,6 +1044,7 @@
     .qr-codes-container {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 2rem;
       margin-top: 2.5rem;
       flex-wrap: wrap;
@@ -1330,6 +1363,14 @@
       font-family: Cormorant Garamond, serif;
       font-size: 1.4rem;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-logo .logo-img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) invert(1);
     }
     .footer-links {
       display: flex;
@@ -1491,7 +1532,7 @@
 <body>
 
   <nav class="nav" id="nav">
-    <a href="#" class="nav-logo">🐘 A Day in Chiangmai</a>
+    <a href="#" class="nav-logo"><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="Logo" class="logo-img"> A Day in Chiangmai</a>
     <ul class="nav-links">
       <li><a href="#programs">Programs</a></li>
       <li><a href="#gallery">Gallery</a></li>
@@ -1575,7 +1616,7 @@
           </div>
           <div class="highlights-grid">
             <div class="highlight-item">
-              <h4>🐘 Highlights</h4>
+              <h4><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="" class="inline-logo"> Highlights</h4>
               <p>Step into their world and learn about who they are, where they came from, and how they're looked after — told through a warm, personal introduction.</p>
             </div>
             <div class="highlight-item">
@@ -1634,7 +1675,7 @@
           </div>
           <div class="highlights-grid">
             <div class="highlight-item">
-              <h4>🐘 Meet the Elephants & Hear Their Stories</h4>
+              <h4><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="" class="inline-logo"> Meet the Elephants & Hear Their Stories</h4>
               <p>Begin with a warm introduction to the elephants — where they came from, how they've recovered, and how your visit helps care for them moving forward.</p>
             </div>
             <div class="highlight-item">
@@ -1697,7 +1738,7 @@
               <p>Walk quietly beside these gentle giants, prepare food with your hands, and share time with them in the river.</p>
             </div>
             <div class="highlight-item">
-              <h4>🐘 Elephant Welcome & Stories</h4>
+              <h4><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="" class="inline-logo"> Elephant Welcome & Stories</h4>
               <p>Begin the day with a gentle introduction, learning about each elephant's journey, where they came from, how they're recovering, and how your presence helps support their care.</p>
             </div>
             <div class="highlight-item">
@@ -1735,7 +1776,7 @@
       </div>
       <div class="highlights-grid">
         <div class="highlight-item">
-          <h4>🐘 Highlights</h4>
+          <h4><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="" class="inline-logo"> Highlights</h4>
           <p>Step into their world and learn about who they are, where they came from, and how they're looked after — told through a warm, personal introduction.</p>
         </div>
         <div class="highlight-item">
@@ -1767,7 +1808,7 @@
       </div>
       <div class="highlights-grid">
         <div class="highlight-item">
-          <h4>🐘 Meet the Elephants & Hear Their Stories</h4>
+          <h4><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="" class="inline-logo"> Meet the Elephants & Hear Their Stories</h4>
           <p>Begin with a warm introduction to the elephants — where they came from, how they've recovered, and how your visit helps care for them moving forward.</p>
         </div>
         <div class="highlight-item">
@@ -1803,7 +1844,7 @@
           <p>Walk quietly beside these gentle giants, prepare food with your hands, and share time with them in the river.</p>
         </div>
         <div class="highlight-item">
-          <h4>🐘 Elephant Welcome & Stories</h4>
+          <h4><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="" class="inline-logo"> Elephant Welcome & Stories</h4>
           <p>Begin the day with a gentle introduction, learning about each elephant's journey, where they came from, how they're recovering, and how your presence helps support their care.</p>
         </div>
         <div class="highlight-item">
@@ -1895,59 +1936,9 @@
   </section>
 
   <section class="reviews-section" id="reviews">
-    <div class="reviews-header fade-in">
-      <div class="tripadvisor-badge">
-        <span>🦉</span>
-        <span>TripAdvisor</span>
-      </div>
-      <h2 class="section-title">What Our Guests Say</h2>
-    </div>
-    
-    <div class="reviews-grid">
-      <div class="review-card fade-in delay-1">
-        <div class="review-stars">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-        <h4 class="review-title">Best experience of our trip!</h4>
-        <p class="review-content">This was absolutely incredible. The elephants were so well cared for, and you could tell they were happy. Walking with them through the forest was magical. The staff were knowledgeable and passionate about what they do.</p>
-        <div class="review-author">
-          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Sarah">
-          <div class="review-author-info">
-            <h5>Sarah M.</h5>
-            <p>Sydney, Australia</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="review-card fade-in delay-2">
-        <div class="review-stars">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-        <h4 class="review-title">Ethical and unforgettable</h4>
-        <p class="review-content">Finally found a place that truly respects elephants. No riding, no tricks — just genuine interaction. The river bathing was so much fun! Highly recommend the full day program if you have time.</p>
-        <div class="review-author">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="James">
-          <div class="review-author-info">
-            <h5>James T.</h5>
-            <p>London, UK</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="review-card fade-in delay-3">
-        <div class="review-stars">
-          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-        <h4 class="review-title">A must-do in Chiang Mai</h4>
-        <p class="review-content">We did the morning program with our kids and it was perfect. They loved feeding the elephants and learning about them. The pickup was right on time and everything was well organized. Worth every baht!</p>
-        <div class="review-author">
-          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Emma">
-          <div class="review-author-info">
-            <h5>Emma L.</h5>
-            <p>Berlin, Germany</p>
-          </div>
-        </div>
-      </div>
+    <div class="section-header slide-up">
+      <h2 class="section-title">Experience the Journey</h2>
+      <p class="section-subtitle">Watch how our guests connect with these gentle giants</p>
     </div>
     
     <div class="video-testimonial fade-in">
@@ -2017,29 +2008,59 @@
     </div>
   </section>
 
-  <section class="qr-section">
-    <div class="qr-video-grid">
-      <div class="qr-container fade-in">
-        <h2 class="qr-title">Review</h2>
-        <div class="qr-logo">
-          <span>🐘</span>
-          <span class="rantong">RANTONG </span>
-          <span class="elephant">ELEPHANT</span>
-        </div>
-        
-        <div class="qr-wrapper">
-          <div class="qr-placeholder">QR Code</div>
-        </div>
-        
-        <p class="qr-contact">
-          More info Call / Line / WhatsApp<br>
-          <strong>+66 90 996 2308</strong>
-          <small>Available before 9 PM</small>
-        </p>
+  <section class="guest-reviews-section">
+    <div class="reviews-header fade-in">
+      <div class="tripadvisor-badge">
+        <span>🦉</span>
+        <span>TripAdvisor</span>
       </div>
-      
-      <div class="qr-video fade-in-right">
-        <video src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/v4.mp4" autoplay loop muted playsinline></video>
+      <h2 class="section-title">What Our Guests Say</h2>
+    </div>
+    
+    <div class="reviews-grid">
+      <div class="review-card fade-in delay-1">
+        <div class="review-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <h4 class="review-title">Best experience of our trip!</h4>
+        <p class="review-content">This was absolutely incredible. The elephants were so well cared for, and you could tell they were happy. Walking with them through the forest was magical. The staff were knowledgeable and passionate about what they do.</p>
+        <div class="review-author">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Sarah">
+          <div class="review-author-info">
+            <h5>Sarah M.</h5>
+            <p>Sydney, Australia</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card fade-in delay-2">
+        <div class="review-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <h4 class="review-title">Ethical and unforgettable</h4>
+        <p class="review-content">Finally found a place that truly respects elephants. No riding, no tricks — just genuine interaction. The river bathing was so much fun! Highly recommend the full day program if you have time.</p>
+        <div class="review-author">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="James">
+          <div class="review-author-info">
+            <h5>James T.</h5>
+            <p>London, UK</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card fade-in delay-3">
+        <div class="review-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <h4 class="review-title">A must-do in Chiang Mai</h4>
+        <p class="review-content">We did the morning program with our kids and it was perfect. They loved feeding the elephants and learning about them. The pickup was right on time and everything was well organized. Worth every baht!</p>
+        <div class="review-author">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Emma">
+          <div class="review-author-info">
+            <h5>Emma L.</h5>
+            <p>Berlin, Germany</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2248,7 +2269,7 @@
 
   <footer class="footer">
     <div class="footer-content">
-      <div class="footer-logo">🐘 A Day in Chiangmai</div>
+      <div class="footer-logo"><img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="Logo" class="logo-img"> A Day in Chiangmai</div>
       <ul class="footer-links">
         <li><a href="#programs">Programs</a></li>
         <li><a href="#gallery">Gallery</a></li>

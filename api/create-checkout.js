@@ -14,18 +14,42 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { quantity, customerEmail, customerName, tourPackage, tourDate, hotel, message } = req.body;
+    const { 
+      amount, 
+      description, 
+      paymentMethod, 
+      paymentType,
+      customerEmail, 
+      customerName, 
+      tourPackage, 
+      tourDate, 
+      adults,
+      children,
+      hotel, 
+      message 
+    } = req.body;
 
-    if (!quantity || quantity < 1 || quantity > 20) {
-      return res.status(400).json({ error: 'Invalid quantity' });
+    if (!amount || amount < 500) {
+      return res.status(400).json({ error: 'Invalid amount' });
     }
 
+    const paymentMethods = paymentMethod === 'promptpay' 
+      ? ['promptpay'] 
+      : ['card'];
+
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: paymentMethods,
       line_items: [
         {
-          price: 'price_1T3clSJY93jdwpb0CCQv2F9c',
-          quantity: parseInt(quantity),
+          price_data: {
+            currency: 'thb',
+            product_data: {
+              name: 'A Day With Elephants',
+              description: description,
+            },
+            unit_amount: amount * 100,
+          },
+          quantity: 1,
         },
       ],
       mode: 'payment',
@@ -36,9 +60,11 @@ export default async function handler(req, res) {
         customer_name: customerName,
         tour_package: tourPackage,
         tour_date: tourDate,
+        adults: adults.toString(),
+        children: children.toString(),
         hotel: hotel || '',
         special_requests: message || '',
-        total_people: quantity.toString(),
+        payment_type: paymentType,
       },
     });
 

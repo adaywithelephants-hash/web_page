@@ -784,9 +784,12 @@
       background: var(--cream-dark);
       padding: 5rem 5%;
     }
-    .guest-reviews-section .reviews-header {
+    .guest-reviews-section .section-header {
       text-align: center;
       margin-bottom: 3rem;
+    }
+    .guest-reviews-section .qr-title {
+      margin-bottom: 2rem;
     }
     .guest-reviews-section .reviews-grid {
       display: grid;
@@ -2009,12 +2012,8 @@
   </section>
 
   <section class="guest-reviews-section">
-    <div class="reviews-header fade-in">
-      <div class="tripadvisor-badge">
-        <span>🦉</span>
-        <span>TripAdvisor</span>
-      </div>
-      <h2 class="section-title">What Our Guests Say</h2>
+    <div class="section-header slide-up">
+      <h2 class="qr-title">Review</h2>
     </div>
     
     <div class="reviews-grid">
@@ -2145,32 +2144,14 @@
           </div>
           <div class="form-group">
             <label>Adults *</label>
-            <select name="adults" id="adultsSelect" required>
-              <option value="1">1 Adult</option>
-              <option value="2">2 Adults</option>
-              <option value="3">3 Adults</option>
-              <option value="4">4 Adults</option>
-              <option value="5">5 Adults</option>
-              <option value="6">6 Adults</option>
-              <option value="7">7 Adults</option>
-              <option value="8">8 Adults</option>
-              <option value="9">9 Adults</option>
-              <option value="10">10 Adults</option>
-            </select>
+            <input type="number" name="adults" id="adultsSelect" min="1" max="50" value="1" required placeholder="Number of adults">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Children (4-9 yrs)</label>
-            <select name="children" id="childrenSelect">
-              <option value="0">None</option>
-              <option value="1">1 Child</option>
-              <option value="2">2 Children</option>
-              <option value="3">3 Children</option>
-              <option value="4">4 Children</option>
-              <option value="5">5 Children</option>
-            </select>
+            <input type="number" name="children" id="childrenSelect" min="0" max="50" value="0" placeholder="Number of children">
           </div>
           <div class="form-group">
             <label>Country</label>
@@ -2517,11 +2498,12 @@
       };
 
       try {
-        await fetch('https://formspree.io/f/mzdgawqp', {
+        const formspreeResponse = await fetch('https://formspree.io/f/mzdgawqp', {
           method: 'POST',
           body: formData,
           headers: { 'Accept': 'application/json' }
         });
+        console.log('Formspree response:', formspreeResponse.status);
       } catch (error) {
         console.log('Formspree error:', error);
       }

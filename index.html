@@ -1101,6 +1101,30 @@
       margin: 0;
       font-weight: 500;
     }
+    .deposit-summary {
+      background: var(--pink-light);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+    }
+    .deposit-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .deposit-info strong {
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+    .deposit-note {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+    }
     .close-btn {
       position: absolute;
       top: 1.2rem;
@@ -1934,7 +1958,8 @@
         <p>If booking later than 10:30 PM, please contact us via WhatsApp +66909962308. Your booking may be adjusted based on availability.</p>
       </div>
       
-      <form action="https://formspree.io/f/mzdgawqp" method="POST">
+      <form id="bookingForm">
+        <input type="hidden" name="form_type" value="booking">
         <div class="form-group">
           <label>Full Name *</label>
           <input type="text" name="name" required placeholder="Your full name">
@@ -1967,13 +1992,18 @@
             <input type="date" name="tour_date" required>
           </div>
           <div class="form-group">
-            <label>Adults</label>
-            <select name="adults">
+            <label>Adults *</label>
+            <select name="adults" id="adultsSelect" required>
               <option value="1">1 Adult</option>
               <option value="2">2 Adults</option>
               <option value="3">3 Adults</option>
               <option value="4">4 Adults</option>
-              <option value="5+">5+ Adults</option>
+              <option value="5">5 Adults</option>
+              <option value="6">6 Adults</option>
+              <option value="7">7 Adults</option>
+              <option value="8">8 Adults</option>
+              <option value="9">9 Adults</option>
+              <option value="10">10 Adults</option>
             </select>
           </div>
         </div>
@@ -1981,11 +2011,13 @@
         <div class="form-row">
           <div class="form-group">
             <label>Children (4-9 yrs)</label>
-            <select name="children">
+            <select name="children" id="childrenSelect">
               <option value="0">None</option>
               <option value="1">1 Child</option>
               <option value="2">2 Children</option>
-              <option value="3+">3+ Children</option>
+              <option value="3">3 Children</option>
+              <option value="4">4 Children</option>
+              <option value="5">5 Children</option>
             </select>
           </div>
           <div class="form-group">
@@ -2003,8 +2035,16 @@
           <label>Special Requests</label>
           <textarea name="message" placeholder="Any dietary requirements or special requests..."></textarea>
         </div>
+
+        <div class="deposit-summary">
+          <div class="deposit-info">
+            <span>Deposit:</span>
+            <span id="depositAmount">500 THB x 1 person = <strong>500 THB</strong></span>
+          </div>
+          <p class="deposit-note">* Remaining balance to be paid on the day of your visit</p>
+        </div>
         
-        <button type="submit" class="submit-btn">Submit Booking Request</button>
+        <button type="submit" class="submit-btn">Proceed to Payment →</button>
       </form>
     </div>
   </div>
@@ -2135,6 +2175,49 @@
 
     setMinDate();
     setInterval(setMinDate, 60000);
+
+    const adultsSelect = document.getElementById('adultsSelect');
+    const childrenSelect = document.getElementById('childrenSelect');
+    const depositAmount = document.getElementById('depositAmount');
+
+    function updateDeposit() {
+      const adults = parseInt(adultsSelect.value) || 0;
+      const children = parseInt(childrenSelect.value) || 0;
+      const total = adults + children;
+      const amount = total * 500;
+      depositAmount.innerHTML = `500 THB x ${total} ${total === 1 ? 'person' : 'people'} = <strong>${amount.toLocaleString()} THB</strong>`;
+    }
+
+    adultsSelect.addEventListener('change', updateDeposit);
+    childrenSelect.addEventListener('change', updateDeposit);
+
+    const bookingForm = document.getElementById('bookingForm');
+    bookingForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = bookingForm.querySelector('.submit-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Processing...';
+      submitBtn.disabled = true;
+
+      const formData = new FormData(bookingForm);
+      const adults = parseInt(formData.get('adults')) || 0;
+      const children = parseInt(formData.get('children')) || 0;
+      const totalPeople = adults + children;
+
+      try {
+        await fetch('https://formspree.io/f/mzdgawqp', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+      } catch (error) {
+        console.log('Formspree error:', error);
+      }
+
+      const stripeUrl = `https://buy.stripe.com/test_4gM4gA0iK1sEeyH9Z3cEw00?quantity=${totalPeople}`;
+      window.location.href = stripeUrl;
+    });
   </script>
 </body>
 </html>

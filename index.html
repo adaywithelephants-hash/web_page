@@ -2215,8 +2215,34 @@
         console.log('Formspree error:', error);
       }
 
-      const stripeUrl = `https://buy.stripe.com/test_4gM4gA0iK1sEeyH9Z3cEw00?prefilled_quantity=${totalPeople}`;
-      window.location.href = stripeUrl;
+      try {
+        const response = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            quantity: totalPeople,
+            customerEmail: formData.get('email'),
+            customerName: formData.get('name'),
+            tourPackage: formData.get('tour_package'),
+            tourDate: formData.get('tour_date'),
+            hotel: formData.get('hotel'),
+            message: formData.get('message')
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error(data.error || 'Failed to create checkout');
+        }
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('เกิดข้อผิดพลาด กรุณาติดต่อเราทาง WhatsApp +66909962308');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
     });
   </script>
 </body>

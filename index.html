@@ -1009,6 +1009,36 @@
     .contact-item p { margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--text); }
     .contact-item small { font-size: 0.8rem; opacity: 0.8; color: var(--text-light); font-weight: 500; }
 
+    .qr-codes-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .qr-code-card {
+      background: white;
+      border-radius: 15px;
+      padding: 1rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .qr-code-card:hover {
+      transform: translateY(-5px);
+    }
+    .qr-code-card img {
+      width: 180px;
+      height: auto;
+      border-radius: 10px;
+    }
+    .qr-code-card p {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -1047,7 +1077,28 @@
       text-align: center;
       color: var(--text-light);
       font-size: 0.9rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    .booking-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      background: #FFF8E7;
+      border: 1px solid #F0E0B8;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .booking-note span {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .booking-note p {
+      font-size: 0.8rem;
+      color: #8B7355;
+      line-height: 1.5;
+      margin: 0;
       font-weight: 500;
     }
     .close-btn {
@@ -1237,6 +1288,15 @@
         right: 1.5rem;
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
+      }
+      
+      .qr-codes-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .qr-code-card img {
+        width: 150px;
       }
       
       .feature-image-section {
@@ -1846,6 +1906,17 @@
           <small>Before 9 PM</small>
         </div>
       </div>
+
+      <div class="qr-codes-container">
+        <div class="qr-code-card">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/QR_AddWhatsApp.jpg" alt="Add WhatsApp">
+          <p>Scan to add WhatsApp</p>
+        </div>
+        <div class="qr-code-card">
+          <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/QR_AddLine.jpg" alt="Add Line">
+          <p>Scan to add Line</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1858,6 +1929,10 @@
       <button class="close-btn" onclick="closeModal()">×</button>
       <h2>Book Your Tour</h2>
       <p class="modal-subtitle">Fill in the details below</p>
+      <div class="booking-note">
+        <span>⚠️</span>
+        <p>If booking later than 10:30 PM, please contact us via WhatsApp +66909962308. Your booking may be adjusted based on availability.</p>
+      </div>
       
       <form action="https://formspree.io/f/mzdgawqp" method="POST">
         <div class="form-group">
@@ -2030,6 +2105,36 @@
     }
     
     setInterval(nextSlide, 5000);
+
+    function setMinDate() {
+      const dateInput = document.querySelector('input[name="tour_date"]');
+      if (!dateInput) return;
+
+      const now = new Date();
+      const thailandOffset = 7 * 60;
+      const localOffset = now.getTimezoneOffset();
+      const thailandTime = new Date(now.getTime() + (thailandOffset + localOffset) * 60000);
+      
+      const currentHour = thailandTime.getHours();
+      const currentMinute = thailandTime.getMinutes();
+      
+      let minDate = new Date(thailandTime);
+      
+      if (currentHour > 22 || (currentHour === 22 && currentMinute >= 30)) {
+        minDate.setDate(minDate.getDate() + 2);
+      } else {
+        minDate.setDate(minDate.getDate() + 1);
+      }
+      
+      const year = minDate.getFullYear();
+      const month = String(minDate.getMonth() + 1).padStart(2, '0');
+      const day = String(minDate.getDate()).padStart(2, '0');
+      
+      dateInput.min = `${year}-${month}-${day}`;
+    }
+
+    setMinDate();
+    setInterval(setMinDate, 60000);
   </script>
 </body>
 </html>

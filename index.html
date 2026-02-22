@@ -1135,11 +1135,13 @@
     }
     .payment-icon {
       width: 60px;
-      height: 40px;
+      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
     }
     .payment-icon img {
       max-width: 100%;
@@ -1149,6 +1151,7 @@
     .payment-icon.emoji {
       font-size: 2rem;
       width: 50px;
+      background: none;
     }
     .payment-info h4 {
       font-size: 1.1rem;
@@ -1174,6 +1177,74 @@
       text-align: center;
       margin-top: 1.5rem;
       font-style: italic;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .loading-content {
+      text-align: center;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--sand);
+      border-top: 4px solid var(--brown);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-content p {
+      font-size: 1.1rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .success-notification {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      box-shadow: 0 10px 40px rgba(76, 175, 80, 0.4);
+      z-index: 10000;
+      transition: all 0.5s ease;
+      opacity: 0;
+    }
+    .success-notification.show {
+      top: 30px;
+      opacity: 1;
+    }
+    .success-notification.fade-out {
+      opacity: 0;
+      top: -100px;
+    }
+    .success-content {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .success-content span {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .success-content p {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
     }
     .close-btn {
       position: absolute;
@@ -1371,6 +1442,16 @@
       }
       .qr-code-card img {
         width: 150px;
+      }
+      
+      .success-notification {
+        left: 10%;
+        right: 10%;
+        transform: none;
+        padding: 0.8rem 1rem;
+      }
+      .success-content p {
+        font-size: 0.85rem;
       }
       
       .feature-image-section {
@@ -2091,6 +2172,20 @@
     </div>
   </div>
 
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Redirecting to payment...</p>
+    </div>
+  </div>
+
+  <div id="successNotification" class="success-notification">
+    <div class="success-content">
+      <span>✓</span>
+      <p>Payment successful! We will contact you shortly.</p>
+    </div>
+  </div>
+
   <div id="paymentMethodModal" class="modal-overlay" style="display: none;">
     <div class="modal payment-modal">
       <button class="close-btn" onclick="closePaymentModals()">&times;</button>
@@ -2100,7 +2195,7 @@
       <div class="payment-options">
         <div class="payment-option" onclick="selectPaymentMethod('promptpay')">
           <div class="payment-icon">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/PromptPay-logo.png" alt="PromptPay">
+            <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/promptpay.png" alt="PromptPay">
           </div>
           <div class="payment-info">
             <h4>PromptPay</h4>
@@ -2110,7 +2205,7 @@
         
         <div class="payment-option" onclick="selectPaymentMethod('card')">
           <div class="payment-icon">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Card">
+            <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/card.jpg" alt="Card">
           </div>
           <div class="payment-info">
             <h4>Credit / Debit Card</h4>
@@ -2278,6 +2373,19 @@
     setMinDate();
     setInterval(setMinDate, 60000);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      const notification = document.getElementById('successNotification');
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.add('fade-out');
+        notification.classList.remove('show');
+      }, 3000);
+      
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     const adultsSelect = document.getElementById('adultsSelect');
     const childrenSelect = document.getElementById('childrenSelect');
 
@@ -2316,6 +2424,7 @@
 
     async function selectPaymentAmount(amountType) {
       document.getElementById('paymentAmountModal').style.display = 'none';
+      document.getElementById('loadingOverlay').style.display = 'flex';
       
       const adults = parseInt(bookingData.adults) || 0;
       const children = parseInt(bookingData.children) || 0;
@@ -2362,6 +2471,7 @@
         }
       } catch (error) {
         console.error('Checkout error:', error);
+        document.getElementById('loadingOverlay').style.display = 'none';
         alert('เกิดข้อผิดพลาด กรุณาติดต่อเราทาง WhatsApp +66909962308');
       }
     }

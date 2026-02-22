@@ -2215,7 +2215,7 @@
         console.log('Formspree error:', error);
       }
 
-      const stripeUrl = `https://buy.stripe.com/test_4gM4gA0iK1sEeyH9Z3cEw00?quantity=${totalPeople}`;
+      const stripeUrl = `https://buy.stripe.com/test_4gM4gA0iK1sEeyH9Z3cEw00?prefilled_quantity=${totalPeople}`;
       window.location.href = stripeUrl;
     });
   </script>

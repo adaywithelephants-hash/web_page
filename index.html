@@ -1101,29 +1101,79 @@
       margin: 0;
       font-weight: 500;
     }
-    .deposit-summary {
-      background: var(--pink-light);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      margin-top: 0.5rem;
-    }
-    .deposit-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.95rem;
-      color: var(--text);
-    }
-    .deposit-info strong {
-      color: var(--text);
-      font-size: 1.1rem;
-    }
     .deposit-note {
       font-size: 0.75rem;
       color: var(--text-light);
       margin-top: 0.5rem;
       margin-bottom: 0;
+    }
+
+    .payment-modal {
+      max-width: 450px;
+    }
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.2rem 1.5rem;
+      background: var(--cream);
+      border: 2px solid var(--sand);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .payment-option:hover {
+      border-color: var(--brown);
+      background: var(--pink-light);
+      transform: translateY(-2px);
+    }
+    .payment-icon {
+      width: 60px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .payment-icon img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .payment-icon.emoji {
+      font-size: 2rem;
+      width: 50px;
+    }
+    .payment-info h4 {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin: 0 0 0.3rem 0;
+      font-weight: 700;
+    }
+    .payment-info p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin: 0;
+      font-weight: 500;
+    }
+    .payment-total {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .deposit-note-modal {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 1.5rem;
+      font-style: italic;
     }
     .close-btn {
       position: absolute;
@@ -2035,17 +2085,69 @@
           <label>Special Requests</label>
           <textarea name="message" placeholder="Any dietary requirements or special requests..."></textarea>
         </div>
-
-        <div class="deposit-summary">
-          <div class="deposit-info">
-            <span>Deposit:</span>
-            <span id="depositAmount">500 THB x 1 person = <strong>500 THB</strong></span>
-          </div>
-          <p class="deposit-note">* Remaining balance to be paid on the day of your visit</p>
-        </div>
         
         <button type="submit" class="submit-btn">Proceed to Payment →</button>
       </form>
+    </div>
+  </div>
+
+  <div id="paymentMethodModal" class="modal-overlay" style="display: none;">
+    <div class="modal payment-modal">
+      <button class="close-btn" onclick="closePaymentModals()">&times;</button>
+      <h2>Choose Payment Method</h2>
+      <p class="modal-subtitle">Select how you'd like to pay</p>
+      
+      <div class="payment-options">
+        <div class="payment-option" onclick="selectPaymentMethod('promptpay')">
+          <div class="payment-icon">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/PromptPay-logo.png" alt="PromptPay">
+          </div>
+          <div class="payment-info">
+            <h4>PromptPay</h4>
+            <p>Scan QR code to pay</p>
+          </div>
+        </div>
+        
+        <div class="payment-option" onclick="selectPaymentMethod('card')">
+          <div class="payment-icon">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Card">
+          </div>
+          <div class="payment-info">
+            <h4>Credit / Debit Card</h4>
+            <p>Visa, Mastercard, etc.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="paymentAmountModal" class="modal-overlay" style="display: none;">
+    <div class="modal payment-modal">
+      <button class="close-btn" onclick="closePaymentModals()">&times;</button>
+      <h2>Payment Amount</h2>
+      <p class="modal-subtitle">Choose deposit or full payment</p>
+      
+      <div class="payment-options">
+        <div class="payment-option" onclick="selectPaymentAmount('deposit')">
+          <div class="payment-icon emoji">💰</div>
+          <div class="payment-info">
+            <h4>Deposit Only</h4>
+            <p>500 THB per person</p>
+            <div class="payment-total" id="depositTotal">Total: 500 THB</div>
+          </div>
+        </div>
+        
+        <div class="payment-option" onclick="selectPaymentAmount('full')">
+          <div class="payment-icon emoji">💎</div>
+          <div class="payment-info">
+            <h4>Full Payment</h4>
+            <p id="fullPriceDesc">Pay the full amount now</p>
+            <div class="payment-total" id="fullTotal">Total: 1,600 THB</div>
+          </div>
+        </div>
+      </div>
+      
+      <p class="deposit-note-modal">* Deposit: Remaining balance to be paid on the day of your visit</p>
     </div>
   </div>
 
@@ -2178,41 +2280,57 @@
 
     const adultsSelect = document.getElementById('adultsSelect');
     const childrenSelect = document.getElementById('childrenSelect');
-    const depositAmount = document.getElementById('depositAmount');
 
-    function updateDeposit() {
-      const adults = parseInt(adultsSelect.value) || 0;
-      const children = parseInt(childrenSelect.value) || 0;
-      const total = adults + children;
-      const amount = total * 500;
-      depositAmount.innerHTML = `500 THB x ${total} ${total === 1 ? 'person' : 'people'} = <strong>${amount.toLocaleString()} THB</strong>`;
+    let bookingData = {};
+    let selectedPaymentMethod = '';
+
+    const packagePrices = {
+      'Half Day Morning - 1,600 THB': { adult: 1600, child: 1000 },
+      'Half Day Afternoon - 1,600 THB': { adult: 1600, child: 1000 },
+      'Full Day - 2,500 THB': { adult: 2500, child: 1500 }
+    };
+
+    function closePaymentModals() {
+      document.getElementById('paymentMethodModal').style.display = 'none';
+      document.getElementById('paymentAmountModal').style.display = 'none';
     }
 
-    adultsSelect.addEventListener('change', updateDeposit);
-    childrenSelect.addEventListener('change', updateDeposit);
-
-    const bookingForm = document.getElementById('bookingForm');
-    bookingForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
+    function selectPaymentMethod(method) {
+      selectedPaymentMethod = method;
+      document.getElementById('paymentMethodModal').style.display = 'none';
       
-      const submitBtn = bookingForm.querySelector('.submit-btn');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Processing...';
-      submitBtn.disabled = true;
-
-      const formData = new FormData(bookingForm);
-      const adults = parseInt(formData.get('adults')) || 0;
-      const children = parseInt(formData.get('children')) || 0;
+      const adults = parseInt(bookingData.adults) || 0;
+      const children = parseInt(bookingData.children) || 0;
       const totalPeople = adults + children;
+      const depositTotal = totalPeople * 500;
+      
+      const packagePrice = packagePrices[bookingData.tourPackage] || { adult: 1600, child: 1000 };
+      const fullTotal = (adults * packagePrice.adult) + (children * packagePrice.child);
+      
+      document.getElementById('depositTotal').textContent = `Total: ${depositTotal.toLocaleString()} THB`;
+      document.getElementById('fullTotal').textContent = `Total: ${fullTotal.toLocaleString()} THB`;
+      document.getElementById('fullPriceDesc').textContent = `Adult: ${packagePrice.adult.toLocaleString()} / Child: ${packagePrice.child.toLocaleString()} THB`;
+      
+      document.getElementById('paymentAmountModal').style.display = 'flex';
+    }
 
-      try {
-        await fetch('https://formspree.io/f/mzdgawqp', {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
-      } catch (error) {
-        console.log('Formspree error:', error);
+    async function selectPaymentAmount(amountType) {
+      document.getElementById('paymentAmountModal').style.display = 'none';
+      
+      const adults = parseInt(bookingData.adults) || 0;
+      const children = parseInt(bookingData.children) || 0;
+      const totalPeople = adults + children;
+      
+      let totalAmount;
+      let description;
+      
+      if (amountType === 'deposit') {
+        totalAmount = totalPeople * 500;
+        description = `Deposit - ${totalPeople} ${totalPeople === 1 ? 'person' : 'people'}`;
+      } else {
+        const packagePrice = packagePrices[bookingData.tourPackage] || { adult: 1600, child: 1000 };
+        totalAmount = (adults * packagePrice.adult) + (children * packagePrice.child);
+        description = `Full Payment - ${adults} Adult${adults > 1 ? 's' : ''}${children > 0 ? `, ${children} Child${children > 1 ? 'ren' : ''}` : ''}`;
       }
 
       try {
@@ -2220,13 +2338,18 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            quantity: totalPeople,
-            customerEmail: formData.get('email'),
-            customerName: formData.get('name'),
-            tourPackage: formData.get('tour_package'),
-            tourDate: formData.get('tour_date'),
-            hotel: formData.get('hotel'),
-            message: formData.get('message')
+            amount: totalAmount,
+            description: description,
+            paymentMethod: selectedPaymentMethod,
+            paymentType: amountType,
+            customerEmail: bookingData.email,
+            customerName: bookingData.name,
+            tourPackage: bookingData.tourPackage,
+            tourDate: bookingData.tourDate,
+            adults: adults,
+            children: children,
+            hotel: bookingData.hotel,
+            message: bookingData.message
           })
         });
 
@@ -2240,9 +2363,39 @@
       } catch (error) {
         console.error('Checkout error:', error);
         alert('เกิดข้อผิดพลาด กรุณาติดต่อเราทาง WhatsApp +66909962308');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
       }
+    }
+
+    const bookingForm = document.getElementById('bookingForm');
+    bookingForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(bookingForm);
+      
+      bookingData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        tourPackage: formData.get('tour_package'),
+        tourDate: formData.get('tour_date'),
+        adults: formData.get('adults'),
+        children: formData.get('children'),
+        country: formData.get('country'),
+        hotel: formData.get('hotel'),
+        message: formData.get('message')
+      };
+
+      try {
+        await fetch('https://formspree.io/f/mzdgawqp', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+      } catch (error) {
+        console.log('Formspree error:', error);
+      }
+
+      document.getElementById('paymentMethodModal').style.display = 'flex';
     });
   </script>
 </body>

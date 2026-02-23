@@ -2440,10 +2440,12 @@
             paymentType: amountType,
             customerEmail: bookingData.email,
             customerName: bookingData.name,
+            phone: bookingData.phone,
             tourPackage: bookingData.tourPackage,
             tourDate: bookingData.tourDate,
             adults: adults,
             children: children,
+            country: bookingData.country,
             hotel: bookingData.hotel,
             message: bookingData.message
           })
@@ -2481,17 +2483,6 @@
         hotel: formData.get('hotel'),
         message: formData.get('message')
       };
-
-      try {
-        const formspreeResponse = await fetch('https://formspree.io/f/mzdgawqp', {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
-        console.log('Formspree response:', formspreeResponse.status);
-      } catch (error) {
-        console.log('Formspree error:', error);
-      }
 
       document.getElementById('paymentMethodModal').style.display = 'flex';
     });

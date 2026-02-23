@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         },
       ],
       mode: 'payment',
-      success_url: 'https://web-page-eight-green.vercel.app/?payment=success',
+      success_url: 'https://web-page-eight-green.vercel.app/api/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://web-page-eight-green.vercel.app/?payment=cancelled',
       customer_email: customerEmail,
       metadata: {

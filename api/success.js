@@ -21,13 +21,22 @@ export default async function handler(req, res) {
     const metadata = session.metadata;
     const amount = session.amount_total / 100;
     const paymentType = metadata.payment_type === 'deposit' ? '💰 DEPOSIT (มัดจำ)' : '💎 FULL PAYMENT (จ่ายเต็ม)';
+    const paymentMethodText = metadata.payment_method === 'promptpay' ? '🏦 PromptPay' : '💳 Credit/Debit Card';
     
     const emailBody = `
-🐘 NEW BOOKING PAYMENT RECEIVED!
+🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
+    
+    ✅ ลูกค้าจ่ายเงินแล้ว ✅
+    ✅ PAYMENT RECEIVED ✅
+
+🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
+
+🐘 NEW BOOKING PAYMENT!
 ================================
 
 ${paymentType}
 💵 Amount: ฿${amount.toLocaleString()}
+${paymentMethodText}
 
 👤 Customer Information:
 - Name: ${metadata.customer_name}
@@ -47,7 +56,6 @@ ${paymentType}
 ${metadata.special_requests || 'None'}
 
 ================================
-View in Stripe Dashboard for more details
     `.trim();
 
     console.log('Sending email via Formspree...');
@@ -59,7 +67,7 @@ View in Stripe Dashboard for more details
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        subject: `${paymentType} - ${metadata.customer_name} - ฿${amount.toLocaleString()}`,
+        subject: `✅ PAID! ${paymentType} - ${metadata.customer_name} - ฿${amount.toLocaleString()} (${paymentMethodText})`,
         message: emailBody,
         email: session.customer_email,
         name: metadata.customer_name

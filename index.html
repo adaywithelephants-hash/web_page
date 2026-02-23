@@ -2430,27 +2430,12 @@
       
       const adults = parseInt(bookingData.adults) || 0;
       const children = parseInt(bookingData.children) || 0;
-      const totalPeople = adults + children;
-      
-      let totalAmount;
-      let description;
-      
-      if (amountType === 'deposit') {
-        totalAmount = totalPeople * 500;
-        description = `Deposit - ${totalPeople} ${totalPeople === 1 ? 'person' : 'people'}`;
-      } else {
-        const packagePrice = packagePrices[bookingData.tourPackage] || { adult: 1600, child: 1000 };
-        totalAmount = (adults * packagePrice.adult) + (children * packagePrice.child);
-        description = `Full Payment - ${adults} Adult${adults > 1 ? 's' : ''}${children > 0 ? `, ${children} Child${children > 1 ? 'ren' : ''}` : ''}`;
-      }
 
       try {
         const response = await fetch('/api/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: totalAmount,
-            description: description,
             paymentMethod: selectedPaymentMethod,
             paymentType: amountType,
             customerEmail: bookingData.email,

@@ -23,6 +23,7 @@ export default async function handler(req, res) {
       tourDate, 
       adults,
       children,
+      country,
       hotel, 
       message 
     } = req.body;
@@ -96,10 +97,12 @@ export default async function handler(req, res) {
       customer_email: customerEmail,
       metadata: {
         customer_name: customerName,
+        customer_phone: req.body.phone || '',
         tour_package: tourPackage,
         tour_date: tourDate,
         adults: adults.toString(),
         children: children.toString(),
+        country: country || '',
         hotel: hotel || '',
         special_requests: message || '',
         payment_type: paymentType,

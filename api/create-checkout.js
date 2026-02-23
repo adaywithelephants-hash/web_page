@@ -106,6 +106,7 @@ export default async function handler(req, res) {
         hotel: hotel || '',
         special_requests: message || '',
         payment_type: paymentType,
+        payment_method: paymentMethod,
       },
     });
 

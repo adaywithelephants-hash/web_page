@@ -3,14 +3,20 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 export default async function handler(req, res) {
   const { session_id } = req.query;
 
+  console.log('Success API called, session_id:', session_id);
+
   if (!session_id) {
+    console.log('No session_id, redirecting to success page');
     return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
   }
 
   try {
+    console.log('Retrieving session from Stripe...');
     const session = await stripe.checkout.sessions.retrieve(session_id, {
       expand: ['payment_intent.latest_charge', 'line_items']
     });
+
+    console.log('Session retrieved, metadata:', session.metadata);
 
     const metadata = session.metadata;
     const amount = session.amount_total / 100;
@@ -44,7 +50,9 @@ ${metadata.special_requests || 'None'}
 View in Stripe Dashboard for more details
     `.trim();
 
-    await fetch('https://formspree.io/f/mzdgawqp', {
+    console.log('Sending email via Formspree...');
+    
+    const formspreeResponse = await fetch('https://formspree.io/f/mzdgawqp', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -58,7 +66,12 @@ View in Stripe Dashboard for more details
       })
     });
 
+    console.log('Formspree response status:', formspreeResponse.status);
+    const formspreeResult = await formspreeResponse.text();
+    console.log('Formspree response body:', formspreeResult);
+
     const receiptUrl = session.payment_intent?.latest_charge?.receipt_url;
+    console.log('Receipt URL:', receiptUrl);
 
     if (receiptUrl) {
       return res.redirect(receiptUrl);
@@ -66,7 +79,7 @@ View in Stripe Dashboard for more details
       return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in success API:', error);
     return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
   }
 }

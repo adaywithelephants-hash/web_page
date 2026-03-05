@@ -1,4 +1,7 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Omise = require('omise')({
+  publicKey: 'pkey_test_66wj2oh7843txj7w1j8',
+  secretKey: process.env.OMISE_SECRET_KEY,
+});
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,8 +20,10 @@ export default async function handler(req, res) {
     const { 
       paymentMethod, 
       paymentType,
+      token,
       customerEmail, 
       customerName, 
+      phone,
       tourPackage, 
       tourDate, 
       adults,
@@ -32,87 +37,93 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid number of adults' });
     }
 
-    const paymentMethods = paymentMethod === 'promptpay' 
-      ? ['promptpay'] 
-      : ['card'];
+    const packagePrices = {
+      'Half Day Morning - 1,600 THB': { adult: 1600, child: 1000 },
+      'Half Day Afternoon - 1,600 THB': { adult: 1600, child: 1000 },
+      'Full Day - 2,500 THB': { adult: 2500, child: 1500 }
+    };
 
-    let line_items = [];
+    let amount;
+    let description;
+    const totalPeople = parseInt(adults) + parseInt(children);
 
     if (paymentType === 'deposit') {
-      const totalPeople = parseInt(adults) + parseInt(children);
-      line_items.push({
-        price_data: {
-          currency: 'thb',
-          product_data: {
-            name: 'Elephant Tour Deposit',
-            description: 'Deposit per person',
-          },
-          unit_amount: 500 * 100,
-        },
-        quantity: totalPeople,
-      });
+      amount = totalPeople * 500 * 100;
+      description = `Elephant Tour Deposit - ${totalPeople} people`;
     } else {
-      const packagePrices = {
-        'Half Day Morning - 1,600 THB': { adult: 1600, child: 1000 },
-        'Half Day Afternoon - 1,600 THB': { adult: 1600, child: 1000 },
-        'Full Day - 2,500 THB': { adult: 2500, child: 1500 }
-      };
       const prices = packagePrices[tourPackage] || { adult: 1600, child: 1000 };
-      
-      if (parseInt(adults) > 0) {
-        line_items.push({
-          price_data: {
-            currency: 'thb',
-            product_data: {
-              name: 'Elephant Tour - Adult',
-              description: tourPackage,
-            },
-            unit_amount: prices.adult * 100,
-          },
-          quantity: parseInt(adults),
-        });
+      amount = ((parseInt(adults) * prices.adult) + (parseInt(children) * prices.child)) * 100;
+      description = `Elephant Tour Full Payment - ${adults} Adult(s), ${children} Child(ren)`;
+    }
+
+    const metadata = {
+      customer_name: customerName,
+      customer_email: customerEmail,
+      customer_phone: phone || '',
+      tour_package: tourPackage,
+      tour_date: tourDate,
+      adults: adults.toString(),
+      children: children.toString(),
+      country: country || '',
+      hotel: hotel || '',
+      special_requests: message || '',
+      payment_type: paymentType,
+      payment_method: paymentMethod,
+    };
+
+    if (paymentMethod === 'promptpay') {
+      const source = await Omise.sources.create({
+        type: 'promptpay',
+        amount: amount,
+        currency: 'thb',
+      });
+
+      const charge = await Omise.charges.create({
+        amount: amount,
+        currency: 'thb',
+        source: source.id,
+        description: description,
+        metadata: metadata,
+      });
+
+      return res.status(200).json({ 
+        type: 'promptpay',
+        qrCode: source.scannable_code?.image?.download_uri,
+        amount: amount / 100,
+        chargeId: charge.id,
+      });
+
+    } else {
+      if (!token) {
+        return res.status(400).json({ error: 'Card token required' });
       }
-      
-      if (parseInt(children) > 0) {
-        line_items.push({
-          price_data: {
-            currency: 'thb',
-            product_data: {
-              name: 'Elephant Tour - Child (4-9 yrs)',
-              description: tourPackage,
-            },
-            unit_amount: prices.child * 100,
-          },
-          quantity: parseInt(children),
+
+      const charge = await Omise.charges.create({
+        amount: amount,
+        currency: 'thb',
+        card: token,
+        description: description,
+        metadata: metadata,
+        return_uri: `https://web-page-eight-green.vercel.app/api/success?charge_id=${encodeURIComponent(JSON.stringify(metadata))}`,
+      });
+
+      if (charge.status === 'pending' && charge.authorize_uri) {
+        return res.status(200).json({ 
+          type: 'redirect',
+          url: charge.authorize_uri,
         });
+      } else if (charge.status === 'successful') {
+        return res.status(200).json({ 
+          type: 'success',
+          chargeId: charge.id,
+        });
+      } else {
+        return res.status(400).json({ error: charge.failure_message || 'Payment failed' });
       }
     }
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: paymentMethods,
-      line_items: line_items,
-      mode: 'payment',
-      success_url: 'https://web-page-eight-green.vercel.app/api/success?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'https://web-page-eight-green.vercel.app/?payment=cancelled',
-      customer_email: customerEmail,
-      metadata: {
-        customer_name: customerName,
-        customer_phone: req.body.phone || '',
-        tour_package: tourPackage,
-        tour_date: tourDate,
-        adults: adults.toString(),
-        children: children.toString(),
-        country: country || '',
-        hotel: hotel || '',
-        special_requests: message || '',
-        payment_type: paymentType,
-        payment_method: paymentMethod,
-      },
-    });
-
-    res.status(200).json({ url: session.url });
   } catch (error) {
-    console.error('Stripe error:', error);
+    console.error('Omise error:', error);
     res.status(500).json({ error: error.message });
   }
 }

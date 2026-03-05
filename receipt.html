@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Receipt - A Day With Elephants</title>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .receipt-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .receipt-header {
+      background: linear-gradient(135deg, #B5A898 0%, #8B7355 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    .receipt-header img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+    .receipt-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .receipt-header p {
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+    .success-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #4CAF50;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+    }
+    .receipt-body {
+      padding: 2rem;
+    }
+    .receipt-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px dashed #ddd;
+    }
+    .receipt-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .receipt-section h3 {
+      color: #8B7355;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+    }
+    .receipt-row .label {
+      color: #666;
+    }
+    .receipt-row .value {
+      font-weight: 600;
+      color: #333;
+      text-align: right;
+    }
+    .amount-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #FFF8E7 0%, #FFF0D4 100%);
+      padding: 1.2rem 1.5rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+    .amount-total .label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #8B7355;
+    }
+    .amount-total .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #4CAF50;
+    }
+    .payment-type-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .deposit {
+      background: #FFF3E0;
+      color: #E65100;
+    }
+    .full {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+    .receipt-footer {
+      background: #FAFAFA;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .receipt-footer p {
+      color: #888;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .contact-info a {
+      color: #8B7355;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #B5A898 0%, #8B7355 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .print-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(139, 115, 85, 0.3);
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #8B7355;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .receipt-id {
+      font-family: monospace;
+      background: #f0f0f0;
+      padding: 0.3rem 0.8rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+    }
+    .note-box {
+      background: #FFF8E7;
+      border-left: 4px solid #FFB74D;
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1rem;
+    }
+    .note-box p {
+      color: #8B7355;
+      font-size: 0.9rem;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .receipt-container {
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .print-btn, .back-btn {
+        display: none !important;
+      }
+    }
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #8B7355;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt-container" id="receiptContainer">
+    <div class="loading" id="loadingState">
+      <div class="loading-spinner"></div>
+      <p>Loading receipt...</p>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    const data = {
+      customerName: urlParams.get('name') || 'Guest',
+      customerEmail: urlParams.get('email') || '',
+      customerPhone: urlParams.get('phone') || '',
+      tourPackage: urlParams.get('package') || '',
+      tourDate: urlParams.get('date') || '',
+      adults: urlParams.get('adults') || '0',
+      children: urlParams.get('children') || '0',
+      hotel: urlParams.get('hotel') || '',
+      amount: urlParams.get('amount') || '0',
+      paymentType: urlParams.get('type') || 'deposit',
+      paymentMethod: urlParams.get('method') || 'promptpay',
+      chargeId: urlParams.get('charge') || '',
+    };
+
+    const formatDate = (dateStr) => {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-GB', { 
+        weekday: 'long',
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      });
+    };
+
+    const now = new Date();
+    const receiptDate = now.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const receiptId = 'RCP-' + now.getFullYear() + 
+      String(now.getMonth() + 1).padStart(2, '0') +
+      String(now.getDate()).padStart(2, '0') + '-' +
+      String(now.getHours()).padStart(2, '0') +
+      String(now.getMinutes()).padStart(2, '0') +
+      String(now.getSeconds()).padStart(2, '0');
+
+    const paymentTypeLabel = data.paymentType === 'deposit' ? 'Deposit' : 'Full Payment';
+    const paymentTypeClass = data.paymentType === 'deposit' ? 'deposit' : 'full';
+    const paymentMethodLabel = data.paymentMethod === 'promptpay' ? 'PromptPay' : 'Credit/Debit Card';
+
+    const remainingNote = data.paymentType === 'deposit' ? `
+      <div class="note-box">
+        <p>⚠️ <strong>Remaining balance</strong> to be paid on the day of your visit.</p>
+      </div>
+    ` : '';
+
+    document.getElementById('receiptContainer').innerHTML = `
+      <div class="receipt-header">
+        <img src="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png" alt="Logo">
+        <h1>A Day With Elephants</h1>
+        <p>Chiang Mai, Thailand</p>
+        <div class="success-badge">
+          <span>✓</span> Payment Successful
+        </div>
+      </div>
+      
+      <div class="receipt-body">
+        <div class="receipt-section">
+          <h3>Receipt Information</h3>
+          <div class="receipt-row">
+            <span class="label">Receipt No.</span>
+            <span class="value receipt-id">${receiptId}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="label">Date</span>
+            <span class="value">${receiptDate}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="label">Payment Type</span>
+            <span class="value"><span class="payment-type-badge ${paymentTypeClass}">${paymentTypeLabel}</span></span>
+          </div>
+          <div class="receipt-row">
+            <span class="label">Payment Method</span>
+            <span class="value">${paymentMethodLabel}</span>
+          </div>
+        </div>
+
+        <div class="receipt-section">
+          <h3>Customer Details</h3>
+          <div class="receipt-row">
+            <span class="label">Name</span>
+            <span class="value">${data.customerName}</span>
+          </div>
+          ${data.customerEmail ? `
+          <div class="receipt-row">
+            <span class="label">Email</span>
+            <span class="value">${data.customerEmail}</span>
+          </div>
+          ` : ''}
+          ${data.customerPhone ? `
+          <div class="receipt-row">
+            <span class="label">Phone</span>
+            <span class="value">${data.customerPhone}</span>
+          </div>
+          ` : ''}
+        </div>
+
+        <div class="receipt-section">
+          <h3>Tour Details</h3>
+          <div class="receipt-row">
+            <span class="label">Package</span>
+            <span class="value">${data.tourPackage}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="label">Tour Date</span>
+            <span class="value">${formatDate(data.tourDate)}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="label">Adults</span>
+            <span class="value">${data.adults}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="label">Children (4-9 yrs)</span>
+            <span class="value">${data.children}</span>
+          </div>
+          ${data.hotel ? `
+          <div class="receipt-row">
+            <span class="label">Hotel Pickup</span>
+            <span class="value">${data.hotel}</span>
+          </div>
+          ` : ''}
+        </div>
+
+        <div class="receipt-section">
+          <h3>Payment Summary</h3>
+          <div class="amount-total">
+            <span class="label">Amount Paid</span>
+            <span class="value">฿${parseInt(data.amount).toLocaleString()}</span>
+          </div>
+          ${remainingNote}
+        </div>
+      </div>
+
+      <div class="receipt-footer">
+        <p>Thank you for booking with us! 🐘</p>
+        <p>We will contact you to confirm your pickup details.</p>
+        
+        <div class="contact-info">
+          <a href="tel:+66909962308">📞 +66 90 996 2308</a>
+          <a href="https://wa.me/66909962308">💬 WhatsApp</a>
+        </div>
+
+        <button class="print-btn" onclick="window.print()">
+          🖨️ Print Receipt
+        </button>
+        <br>
+        <a href="https://web-page-eight-green.vercel.app" class="back-btn">← Back to Home</a>
+      </div>
+    `;
+  </script>
+</body>
+</html>

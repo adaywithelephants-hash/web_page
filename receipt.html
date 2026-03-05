@@ -192,16 +192,54 @@
       font-size: 0.9rem;
     }
     @media print {
-      body {
-        background: white;
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
         padding: 0;
+        background: white;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .receipt-container {
+        width: 100%;
+        height: 100%;
+        max-width: none;
         box-shadow: none;
         border-radius: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .receipt-header {
+        padding: 3rem 2rem;
+      }
+      .receipt-body {
+        flex: 1;
+        padding: 2rem 3rem;
+      }
+      .receipt-footer {
+        padding: 2rem 3rem;
       }
       .print-btn, .back-btn {
         display: none !important;
+      }
+      .receipt-section {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+      }
+      .receipt-row {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+      }
+      .amount-total .value {
+        font-size: 2.2rem;
       }
     }
     .loading {
@@ -382,13 +420,17 @@
           <a href="https://wa.me/66909962308">💬 WhatsApp</a>
         </div>
 
-        <button class="print-btn" onclick="window.print()">
+        <button class="print-btn" onclick="printReceipt()">
           🖨️ Print Receipt
         </button>
         <br>
         <a href="https://web-page-eight-green.vercel.app" class="back-btn">← Back to Home</a>
       </div>
     `;
+
+    function printReceipt() {
+      window.print();
+    }
   </script>
 </body>
 </html>

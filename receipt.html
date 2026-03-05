@@ -194,97 +194,150 @@
     @media print {
       @page {
         size: A4;
-        margin: 10mm;
+        margin: 15mm;
       }
       html, body {
         width: 100%;
         height: auto;
         margin: 0;
         padding: 0;
-        background: white;
-        font-size: 11px;
+        background: white !important;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        padding: 0;
       }
       .receipt-container {
         width: 100%;
-        max-width: none;
+        max-width: 500px;
+        margin: 0 auto;
         box-shadow: none;
-        border-radius: 0;
+        border: 1px solid #ddd;
+        border-radius: 10px;
       }
       .receipt-header {
         padding: 1.5rem;
+        background: #8B7355 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        color-adjust: exact;
       }
       .receipt-header img {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
       }
       .receipt-header h1 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
+        color: white !important;
+      }
+      .receipt-header p {
+        color: white !important;
       }
       .success-badge {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
         margin: 1rem 0;
+        background: #4CAF50 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
       }
       .receipt-body {
-        padding: 1rem 1.5rem;
+        padding: 1.2rem 1.5rem;
       }
       .receipt-section {
         margin-bottom: 1rem;
         padding-bottom: 1rem;
       }
       .receipt-section h3 {
-        font-size: 0.75rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.7rem;
+        margin-bottom: 0.6rem;
+        color: #8B7355 !important;
       }
       .receipt-row {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         margin-bottom: 0.4rem;
+      }
+      .receipt-row .label {
+        color: #666 !important;
+      }
+      .receipt-row .value {
+        color: #333 !important;
       }
       .amount-total {
         padding: 0.8rem 1rem;
         margin-top: 0.5rem;
+        background: #FFF8E7 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        color-adjust: exact;
       }
       .amount-total .label {
         font-size: 0.9rem;
+        color: #8B7355 !important;
       }
       .amount-total .value {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
+        color: #4CAF50 !important;
       }
       .note-box {
-        padding: 0.6rem;
+        padding: 0.5rem 0.8rem;
         margin-top: 0.5rem;
+        background: #FFF8E7 !important;
+        border-left: 3px solid #FFB74D !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        color-adjust: exact;
       }
       .note-box p {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        color: #8B7355 !important;
       }
       .receipt-footer {
         padding: 1rem 1.5rem;
+        background: #FAFAFA !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        color-adjust: exact;
       }
       .receipt-footer p {
-        font-size: 0.75rem;
-        margin-bottom: 0.3rem;
+        font-size: 0.7rem;
+        margin-bottom: 0.2rem;
+        color: #888 !important;
       }
       .contact-info {
         margin-top: 0.5rem;
         gap: 1rem;
       }
       .contact-info a {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        color: #8B7355 !important;
       }
       .print-btn, .back-btn {
         display: none !important;
       }
       .payment-type-badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.6rem;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      .payment-type-badge.deposit {
+        background: #FFF3E0 !important;
+        color: #E65100 !important;
+      }
+      .payment-type-badge.full {
+        background: #E8F5E9 !important;
+        color: #2E7D32 !important;
+      }
+      .receipt-id {
+        background: #f0f0f0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
       }
     }
     .loading {

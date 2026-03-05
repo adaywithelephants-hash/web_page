@@ -72,26 +72,45 @@ export default async function handler(req, res) {
     };
 
     if (paymentMethod === 'promptpay') {
-      const source = await Omise.sources.create({
-        type: 'promptpay',
-        amount: amount,
-        currency: 'thb',
-      });
+      console.log('Creating PromptPay source, amount:', amount);
+      
+      try {
+        const source = await Omise.sources.create({
+          type: 'promptpay',
+          amount: amount,
+          currency: 'thb',
+        });
 
-      const charge = await Omise.charges.create({
-        amount: amount,
-        currency: 'thb',
-        source: source.id,
-        description: description,
-        metadata: metadata,
-      });
+        console.log('Source created:', source.id);
+        console.log('QR Code URL:', source.scannable_code?.image?.download_uri);
 
-      return res.status(200).json({ 
-        type: 'promptpay',
-        qrCode: source.scannable_code?.image?.download_uri,
-        amount: amount / 100,
-        chargeId: charge.id,
-      });
+        const charge = await Omise.charges.create({
+          amount: amount,
+          currency: 'thb',
+          source: source.id,
+          description: description,
+          metadata: metadata,
+        });
+
+        console.log('Charge created:', charge.id, 'status:', charge.status);
+
+        const qrCodeUrl = source.scannable_code?.image?.download_uri;
+        
+        if (!qrCodeUrl) {
+          console.error('No QR code URL in source');
+          return res.status(500).json({ error: 'Failed to generate QR code' });
+        }
+
+        return res.status(200).json({ 
+          type: 'promptpay',
+          qrCode: qrCodeUrl,
+          amount: amount / 100,
+          chargeId: charge.id,
+        });
+      } catch (sourceError) {
+        console.error('PromptPay error:', sourceError);
+        return res.status(500).json({ error: sourceError.message });
+      }
 
     } else {
       if (!token) {

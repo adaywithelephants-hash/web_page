@@ -19,7 +19,20 @@ export default async function handler(req, res) {
 
     try {
       metadata = JSON.parse(decodeURIComponent(charge_id));
-      amount = 0;
+      const packagePrices = {
+        'Half Day Morning - 1,600 THB': { adult: 1600, child: 1000 },
+        'Half Day Afternoon - 1,600 THB': { adult: 1600, child: 1000 },
+        'Full Day - 2,500 THB': { adult: 2500, child: 1500 }
+      };
+      const prices = packagePrices[metadata.tour_package] || { adult: 1600, child: 1000 };
+      const adults = parseInt(metadata.adults) || 0;
+      const children = parseInt(metadata.children) || 0;
+      
+      if (metadata.payment_type === 'deposit') {
+        amount = (adults + children) * 500;
+      } else {
+        amount = (adults * prices.adult) + (children * prices.child);
+      }
       customerEmail = metadata.customer_email;
     } catch {
       const charge = await Omise.charges.retrieve(charge_id);
@@ -84,7 +97,22 @@ ${metadata.special_requests || 'None'}
 
     console.log('Formspree response:', formspreeResponse.status);
 
-    return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
+    const receiptParams = new URLSearchParams({
+      name: metadata.customer_name || '',
+      email: customerEmail || '',
+      phone: metadata.customer_phone || '',
+      package: metadata.tour_package || '',
+      date: metadata.tour_date || '',
+      adults: metadata.adults || '0',
+      children: metadata.children || '0',
+      hotel: metadata.hotel || '',
+      amount: amount.toString(),
+      type: metadata.payment_type || 'deposit',
+      method: metadata.payment_method || 'promptpay',
+      charge: charge_id.substring(0, 20) || ''
+    });
+
+    return res.redirect(`https://web-page-eight-green.vercel.app/receipt.html?${receiptParams.toString()}`);
 
   } catch (error) {
     console.error('Error:', error);

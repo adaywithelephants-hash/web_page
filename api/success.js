@@ -1,31 +1,39 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Omise = require('omise')({
+  publicKey: 'pkey_test_66wj2oh7843txj7w1j8',
+  secretKey: process.env.OMISE_SECRET_KEY,
+});
 
 export default async function handler(req, res) {
-  const { session_id } = req.query;
+  const { charge_id } = req.query;
 
-  console.log('Success API called, session_id:', session_id);
+  console.log('Success API called, charge_id:', charge_id);
 
-  if (!session_id) {
-    console.log('No session_id, redirecting to success page');
+  if (!charge_id) {
     return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
   }
 
   try {
-    console.log('Retrieving session from Stripe...');
-    const session = await stripe.checkout.sessions.retrieve(session_id, {
-      expand: ['payment_intent.latest_charge', 'line_items']
-    });
+    let metadata;
+    let amount;
+    let customerEmail;
 
-    console.log('Session retrieved, metadata:', session.metadata);
+    try {
+      metadata = JSON.parse(decodeURIComponent(charge_id));
+      amount = 0;
+      customerEmail = metadata.customer_email;
+    } catch {
+      const charge = await Omise.charges.retrieve(charge_id);
+      metadata = charge.metadata;
+      amount = charge.amount / 100;
+      customerEmail = metadata.customer_email;
+    }
 
-    const metadata = session.metadata;
-    const amount = session.amount_total / 100;
     const paymentType = metadata.payment_type === 'deposit' ? '💰 DEPOSIT (มัดจำ)' : '💎 FULL PAYMENT (จ่ายเต็ม)';
     const paymentMethodText = metadata.payment_method === 'promptpay' ? '🏦 PromptPay' : '💳 Credit/Debit Card';
-    
+
     const emailBody = `
 🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-    
+
     ✅ ลูกค้าจ่ายเงินแล้ว ✅
     ✅ PAYMENT RECEIVED ✅
 
@@ -40,7 +48,7 @@ ${paymentMethodText}
 
 👤 Customer Information:
 - Name: ${metadata.customer_name}
-- Email: ${session.customer_email}
+- Email: ${customerEmail}
 - Phone: ${metadata.customer_phone || 'Not specified'}
 - Country: ${metadata.country || 'Not specified'}
 
@@ -59,35 +67,27 @@ ${metadata.special_requests || 'None'}
     `.trim();
 
     console.log('Sending email via Formspree...');
-    
+
     const formspreeResponse = await fetch('https://formspree.io/f/mzdgawqp', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
       body: JSON.stringify({
         subject: `✅ PAID! ${paymentType} - ${metadata.customer_name} - ฿${amount.toLocaleString()} (${paymentMethodText})`,
         message: emailBody,
-        email: session.customer_email,
+        email: customerEmail,
         name: metadata.customer_name
       })
     });
 
-    console.log('Formspree response status:', formspreeResponse.status);
-    const formspreeResult = await formspreeResponse.text();
-    console.log('Formspree response body:', formspreeResult);
+    console.log('Formspree response:', formspreeResponse.status);
 
-    const receiptUrl = session.payment_intent?.latest_charge?.receipt_url;
-    console.log('Receipt URL:', receiptUrl);
+    return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
 
-    if (receiptUrl) {
-      return res.redirect(receiptUrl);
-    } else {
-      return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
-    }
   } catch (error) {
-    console.error('Error in success API:', error);
+    console.error('Error:', error);
     return res.redirect('https://web-page-eight-green.vercel.app/?payment=success');
   }
 }

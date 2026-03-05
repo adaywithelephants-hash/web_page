@@ -81,8 +81,7 @@ export default async function handler(req, res) {
           currency: 'thb',
         });
 
-        console.log('Source created:', source.id);
-        console.log('QR Code URL:', source.scannable_code?.image?.download_uri);
+        console.log('Source created:', JSON.stringify(source, null, 2));
 
         const charge = await Omise.charges.create({
           amount: amount,
@@ -94,11 +93,28 @@ export default async function handler(req, res) {
 
         console.log('Charge created:', charge.id, 'status:', charge.status);
 
-        const qrCodeUrl = source.scannable_code?.image?.download_uri;
+        let qrCodeUrl = source.scannable_code?.image?.download_uri;
+        
+        if (!qrCodeUrl && charge.source?.scannable_code?.image?.download_uri) {
+          qrCodeUrl = charge.source.scannable_code.image.download_uri;
+        }
+
+        if (!qrCodeUrl) {
+          const retrievedCharge = await Omise.charges.retrieve(charge.id);
+          qrCodeUrl = retrievedCharge.source?.scannable_code?.image?.download_uri;
+          console.log('Retrieved charge source:', JSON.stringify(retrievedCharge.source, null, 2));
+        }
         
         if (!qrCodeUrl) {
-          console.error('No QR code URL in source');
-          return res.status(500).json({ error: 'Failed to generate QR code' });
+          console.error('No QR code URL found anywhere');
+          return res.status(500).json({ 
+            error: 'PromptPay QR code not available. Please enable PromptPay in Omise Dashboard or contact support.',
+            debug: {
+              sourceId: source.id,
+              chargeId: charge.id,
+              chargeStatus: charge.status
+            }
+          });
         }
 
         return res.status(200).json({ 

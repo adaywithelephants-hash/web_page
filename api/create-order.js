@@ -1,0 +1,131 @@
+const PAYPAL_CLIENT_ID = 'AezCvnvCbUyfaioH2qaVN4-HZSuph3m2E-hghqxArTwbqMqF1oDPWrd_NbyhZkeeyjptNxTIfA9Dpgy1';
+const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
+const PAYPAL_API = 'https://api-m.sandbox.paypal.com';
+
+async function getAccessToken() {
+  const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_SECRET}`).toString('base64');
+  
+  const response = await fetch(`${PAYPAL_API}/v1/oauth2/token`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  });
+  
+  const data = await response.json();
+  return data.access_token;
+}
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { 
+      paymentType,
+      customerEmail, 
+      customerName, 
+      phone,
+      tourPackage, 
+      tourDate, 
+      adults,
+      children,
+      country,
+      hotel, 
+      message 
+    } = req.body;
+
+    const packagePrices = {
+      'Half Day Morning - 1,600 THB': { adult: 1600, child: 1000 },
+      'Half Day Afternoon - 1,600 THB': { adult: 1600, child: 1000 },
+      'Full Day - 2,500 THB': { adult: 2500, child: 1500 }
+    };
+
+    let amountTHB;
+    let description;
+    const totalPeople = parseInt(adults) + parseInt(children);
+
+    if (paymentType === 'deposit') {
+      amountTHB = totalPeople * 500;
+      description = `Elephant Tour Deposit - ${totalPeople} people`;
+    } else {
+      const prices = packagePrices[tourPackage] || { adult: 1600, child: 1000 };
+      amountTHB = (parseInt(adults) * prices.adult) + (parseInt(children) * prices.child);
+      description = `Elephant Tour Full Payment - ${adults} Adult(s), ${children} Child(ren)`;
+    }
+
+    const exchangeRate = 35;
+    const amountUSD = (amountTHB / exchangeRate).toFixed(2);
+
+    const accessToken = await getAccessToken();
+
+    const orderResponse = await fetch(`${PAYPAL_API}/v2/checkout/orders`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        intent: 'CAPTURE',
+        purchase_units: [{
+          amount: {
+            currency_code: 'USD',
+            value: amountUSD,
+          },
+          description: description,
+          custom_id: JSON.stringify({
+            customer_name: customerName,
+            customer_email: customerEmail,
+            customer_phone: phone || '',
+            tour_package: tourPackage,
+            tour_date: tourDate,
+            adults: adults,
+            children: children,
+            country: country || '',
+            hotel: hotel || '',
+            special_requests: message || '',
+            payment_type: paymentType,
+            amount_thb: amountTHB,
+          }),
+        }],
+        application_context: {
+          brand_name: 'A Day With Elephants',
+          landing_page: 'NO_PREFERENCE',
+          user_action: 'PAY_NOW',
+          return_url: 'https://web-page-eight-green.vercel.app/api/capture-order',
+          cancel_url: 'https://web-page-eight-green.vercel.app/?payment=cancelled',
+        },
+      }),
+    });
+
+    const orderData = await orderResponse.json();
+    console.log('PayPal order created:', orderData.id);
+
+    const approveUrl = orderData.links?.find(link => link.rel === 'approve')?.href;
+
+    if (approveUrl) {
+      return res.status(200).json({ 
+        orderID: orderData.id,
+        approveUrl: approveUrl,
+      });
+    } else {
+      console.error('PayPal error:', orderData);
+      return res.status(500).json({ error: 'Failed to create PayPal order' });
+    }
+
+  } catch (error) {
+    console.error('PayPal error:', error);
+    res.status(500).json({ error: error.message });
+  }
+}

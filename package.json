@@ -2,6 +2,6 @@
   "name": "elephant-tour-website",
   "version": "1.0.0",
   "dependencies": {
-    "omise": "^0.12.0"
+    "@paypal/checkout-server-sdk": "^1.0.3"
   }
 }

@@ -422,7 +422,7 @@
 
     const paymentTypeLabel = data.paymentType === 'deposit' ? 'Deposit' : 'Full Payment';
     const paymentTypeClass = data.paymentType === 'deposit' ? 'deposit' : 'full';
-    const paymentMethodLabel = data.paymentMethod === 'promptpay' ? 'PromptPay' : 'Credit/Debit Card';
+    const paymentMethodLabel = data.paymentMethod === 'paypal' ? 'PayPal' : data.paymentMethod === 'promptpay' ? 'PromptPay' : 'Credit/Debit Card';
 
     const remainingNote = data.paymentType === 'deposit' ? `
       <div class="note-box">

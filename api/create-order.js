@@ -58,17 +58,34 @@ export default async function handler(req, res) {
 
     if (paymentType === 'deposit') {
       amountTHB = totalPeople * 500;
-      description = `Elephant Tour Deposit - ${totalPeople} people`;
+      description = `Deposit ${totalPeople} ppl`;
     } else {
       const prices = packagePrices[tourPackage] || { adult: 1600, child: 1000 };
       amountTHB = (parseInt(adults) * prices.adult) + (parseInt(children) * prices.child);
-      description = `Elephant Tour Full Payment - ${adults} Adult(s), ${children} Child(ren)`;
+      description = `Full ${adults}A ${children}C`;
     }
 
     const exchangeRate = 35;
     const amountUSD = (amountTHB / exchangeRate).toFixed(2);
 
     const accessToken = await getAccessToken();
+
+    const metadata = {
+      customer_name: customerName,
+      customer_email: customerEmail,
+      customer_phone: phone || '',
+      tour_package: tourPackage,
+      tour_date: tourDate,
+      adults: adults,
+      children: children,
+      country: country || '',
+      hotel: hotel || '',
+      special_requests: message || '',
+      payment_type: paymentType,
+      amount_thb: amountTHB,
+    };
+
+    const metaParam = Buffer.from(JSON.stringify(metadata)).toString('base64');
 
     const orderResponse = await fetch(`${PAYPAL_API}/v2/checkout/orders`, {
       method: 'POST',
@@ -84,33 +101,19 @@ export default async function handler(req, res) {
             value: amountUSD,
           },
           description: description,
-          custom_id: JSON.stringify({
-            customer_name: customerName,
-            customer_email: customerEmail,
-            customer_phone: phone || '',
-            tour_package: tourPackage,
-            tour_date: tourDate,
-            adults: adults,
-            children: children,
-            country: country || '',
-            hotel: hotel || '',
-            special_requests: message || '',
-            payment_type: paymentType,
-            amount_thb: amountTHB,
-          }),
         }],
         application_context: {
           brand_name: 'A Day With Elephants',
           landing_page: 'NO_PREFERENCE',
           user_action: 'PAY_NOW',
-          return_url: 'https://www.adaywithelephants.com/api/capture-order',
+          return_url: `https://www.adaywithelephants.com/api/capture-order?meta=${encodeURIComponent(metaParam)}`,
           cancel_url: 'https://www.adaywithelephants.com/?payment=cancelled',
         },
       }),
     });
 
     const orderData = await orderResponse.json();
-    console.log('PayPal order created:', orderData.id);
+    console.log('PayPal order response:', JSON.stringify(orderData));
 
     const approveUrl = orderData.links?.find(link => link.rel === 'approve')?.href;
 
@@ -120,8 +123,8 @@ export default async function handler(req, res) {
         approveUrl: approveUrl,
       });
     } else {
-      console.error('PayPal error:', orderData);
-      return res.status(500).json({ error: 'Failed to create PayPal order' });
+      console.error('PayPal error:', JSON.stringify(orderData));
+      return res.status(500).json({ error: 'Failed to create PayPal order', details: orderData });
     }
 
   } catch (error) {

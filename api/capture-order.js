@@ -19,9 +19,7 @@ async function getAccessToken() {
 }
 
 export default async function handler(req, res) {
-  const { token } = req.query;
-
-  console.log('Capture order called, token:', token);
+  const { token, meta } = req.query;
 
   if (!token) {
     return res.redirect('https://www.adaywithelephants.com/?payment=error');
@@ -42,54 +40,41 @@ export default async function handler(req, res) {
     console.log('Capture response:', captureData.status);
 
     if (captureData.status === 'COMPLETED') {
-      const customId = captureData.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
       let metadata = {};
       
       try {
-        metadata = JSON.parse(customId);
+        metadata = JSON.parse(Buffer.from(decodeURIComponent(meta), 'base64').toString('utf8'));
       } catch {
         metadata = {};
       }
 
       const amount = metadata.amount_thb || 0;
-      const paymentType = metadata.payment_type === 'deposit' ? '💰 DEPOSIT (มัดจำ)' : '💎 FULL PAYMENT (จ่ายเต็ม)';
+      const paymentType = metadata.payment_type === 'deposit' ? 'DEPOSIT' : 'FULL PAYMENT';
 
       const emailBody = `
-🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-
-    ✅ ลูกค้าจ่ายเงินแล้ว ✅
-    ✅ PAYMENT RECEIVED ✅
-
-🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-
-🐘 NEW BOOKING PAYMENT!
-================================
+NEW BOOKING PAYMENT
 
 ${paymentType}
-💵 Amount: ฿${amount.toLocaleString()}
-💳 PayPal
+Amount: ${amount.toLocaleString()} THB
+PayPal
 
-👤 Customer Information:
+Customer Information:
 - Name: ${metadata.customer_name || 'N/A'}
 - Email: ${metadata.customer_email || 'N/A'}
 - Phone: ${metadata.customer_phone || 'Not specified'}
 - Country: ${metadata.country || 'Not specified'}
 
-📋 Tour Details:
+Tour Details:
 - Package: ${metadata.tour_package || 'N/A'}
 - Date: ${metadata.tour_date || 'N/A'}
 - Adults: ${metadata.adults || '0'}
 - Children: ${metadata.children || '0'}
 
-🏨 Hotel: ${metadata.hotel || 'Not specified'}
+Hotel: ${metadata.hotel || 'Not specified'}
 
-📝 Special Requests:
+Special Requests:
 ${metadata.special_requests || 'None'}
-
-================================
       `.trim();
-
-      console.log('Sending email via Formspree...');
 
       await fetch('https://formspree.io/f/mzdgawqp', {
         method: 'POST',
@@ -98,7 +83,7 @@ ${metadata.special_requests || 'None'}
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          subject: `✅ PAID! ${paymentType} - ${metadata.customer_name} - ฿${amount.toLocaleString()} (PayPal)`,
+          subject: `PAID! ${paymentType} - ${metadata.customer_name} - ${amount.toLocaleString()} THB (PayPal)`,
           message: emailBody,
           email: metadata.customer_email,
           name: metadata.customer_name

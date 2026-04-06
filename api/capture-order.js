@@ -1,4 +1,4 @@
-const PAYPAL_CLIENT_ID = 'AezCvnvCbUyfaioH2qaVN4-HZSuph3m2E-hghqxArTwbqMqF1oDPWrd_NbyhZkeeyjptNxTIfA9Dpgy1';
+const PAYPAL_CLIENT_ID = 'Aeti9Sc9mx4kADy5OhzPaI5FBmm6HA6SvTCye9iebfYs1Bn5QTl61hTasfj2dhib2Ig_89zYtUYDUrgb';
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 const PAYPAL_API = 'https://api-m.sandbox.paypal.com';
 
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   console.log('Capture order called, token:', token);
 
   if (!token) {
-    return res.redirect('https://web-page-eight-green.vercel.app/?payment=error');
+    return res.redirect('https://www.adaywithelephants.com/?payment=error');
   }
 
   try {
@@ -120,15 +120,15 @@ ${metadata.special_requests || 'None'}
         charge: token.substring(0, 20) || ''
       });
 
-      return res.redirect(`https://web-page-eight-green.vercel.app/receipt.html?${receiptParams.toString()}`);
+      return res.redirect(`https://www.adaywithelephants.com/receipt.html?${receiptParams.toString()}`);
 
     } else {
       console.error('Payment not completed:', captureData);
-      return res.redirect('https://web-page-eight-green.vercel.app/?payment=error');
+      return res.redirect('https://www.adaywithelephants.com/?payment=error');
     }
 
   } catch (error) {
     console.error('Capture error:', error);
-    return res.redirect('https://web-page-eight-green.vercel.app/?payment=error');
+    return res.redirect('https://www.adaywithelephants.com/?payment=error');
   }
 }

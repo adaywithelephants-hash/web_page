@@ -1,4 +1,4 @@
-const PAYPAL_CLIENT_ID = 'AezCvnvCbUyfaioH2qaVN4-HZSuph3m2E-hghqxArTwbqMqF1oDPWrd_NbyhZkeeyjptNxTIfA9Dpgy1';
+const PAYPAL_CLIENT_ID = 'Aeti9Sc9mx4kADy5OhzPaI5FBmm6HA6SvTCye9iebfYs1Bn5QTl61hTasfj2dhib2Ig_89zYtUYDUrgb';
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 const PAYPAL_API = 'https://api-m.sandbox.paypal.com';
 
@@ -103,8 +103,8 @@ export default async function handler(req, res) {
           brand_name: 'A Day With Elephants',
           landing_page: 'NO_PREFERENCE',
           user_action: 'PAY_NOW',
-          return_url: 'https://web-page-eight-green.vercel.app/api/capture-order',
-          cancel_url: 'https://web-page-eight-green.vercel.app/?payment=cancelled',
+          return_url: 'https://www.adaywithelephants.com/api/capture-order',
+          cancel_url: 'https://www.adaywithelephants.com/?payment=cancelled',
         },
       }),
     });

@@ -1,4 +1,4 @@
-const PAYPAL_CLIENT_ID = 'Aeti9Sc9mx4kADy5OhzPaI5FBmm6HA6SvTCye9iebfYs1Bn5QTl61hTasfj2dhib2Ig_89zYtUYDUrgb';
+const PAYPAL_CLIENT_ID = 'Aeiumjsj90kuX2tHy9z1UH3fOpkm9OdpkhM4t2dJSwdvzay4seX50fCTouZBiTpNrxi0OUmbsW29Ryod';
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 const PAYPAL_API = 'https://api-m.sandbox.paypal.com';
 

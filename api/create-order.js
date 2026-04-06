@@ -121,6 +121,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ 
         orderID: orderData.id,
         approveUrl: approveUrl,
+        meta: metaParam,
       });
     } else {
       console.error('PayPal error:', JSON.stringify(orderData));

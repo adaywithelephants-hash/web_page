@@ -1271,7 +1271,7 @@
     .confirm-payment-btn {
       width: 100%;
       padding: 1rem;
-      background: var(--green);
+      background: #4CAF50;
       color: white;
       border: none;
       border-radius: 10px;
@@ -1286,6 +1286,7 @@
     }
     .confirm-payment-btn:disabled {
       background: #ccc;
+      color: #888;
       cursor: not-allowed;
     }
 
@@ -2707,6 +2708,22 @@
       }
     }
 
+    async function uploadSlipToImgur(base64Data) {
+      const imageData = base64Data.replace(/^data:image\/\w+;base64,/, '');
+      const response = await fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Client-ID 546c25a59c58ad7'
+        },
+        body: JSON.stringify({ image: imageData, type: 'base64' }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        return data.data.link;
+      }
+      return null;
+    }
+
     async function confirmPayment() {
       if (!slipBase64) {
         alert('Please upload your payment slip first');
@@ -2715,23 +2732,27 @@
 
       const btn = document.getElementById('confirmPaymentBtn');
       btn.disabled = true;
-      btn.textContent = 'Sending confirmation...';
+      btn.textContent = 'Uploading slip...';
 
       try {
+        const slipUrl = await uploadSlipToImgur(slipBase64);
+        
+        btn.textContent = 'Sending confirmation...';
+
         const amount = currentAmount;
         const paymentType = selectedPaymentType === 'deposit' ? 'DEPOSIT' : 'FULL PAYMENT';
 
-        const emailBody = `NEW BOOKING PAYMENT (with slip)\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nPromptPay\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}\n\nPayment slip attached (see below or check Formspree dashboard)`;
+        const emailBody = `NEW BOOKING PAYMENT\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nPromptPay\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}\n\nPayment Slip: ${slipUrl || 'Upload failed - please verify manually'}`;
 
         await fetch('https://formspree.io/f/mzdgawqp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
-            subject: `PAID! ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB (PromptPay + Slip)`,
+            subject: `PAID! ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB (PromptPay)`,
             message: emailBody,
             email: bookingData.email,
             name: bookingData.name,
-            _slip: slipBase64.substring(0, 500) + '...(truncated)'
+            slip_url: slipUrl || 'Upload failed'
           })
         });
 
@@ -2747,7 +2768,8 @@
           amount: amount.toString(),
           type: selectedPaymentType || 'deposit',
           method: 'promptpay',
-          charge: 'PP' + Date.now().toString(36)
+          charge: 'PP' + Date.now().toString(36),
+          slip: slipUrl || ''
         });
 
         window.location.href = `/receipt.html?${receiptParams.toString()}`;

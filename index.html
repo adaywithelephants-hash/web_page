@@ -2354,7 +2354,12 @@
         <span>After payment, tap the button below</span>
       </div>
       
-      <button class="confirm-payment-btn" id="confirmPaymentBtn" onclick="confirmPayment()">
+      <label class="confirm-checkbox" style="display:flex;align-items:center;gap:8px;margin-top:1rem;cursor:pointer;font-size:0.9rem;color:#555;">
+        <input type="checkbox" id="paymentConfirmCheck" onchange="document.getElementById('confirmPaymentBtn').disabled = !this.checked" style="width:18px;height:18px;cursor:pointer;">
+        I confirm that I have already transferred the money
+      </label>
+      
+      <button class="confirm-payment-btn" id="confirmPaymentBtn" onclick="confirmPayment()" disabled>
         I have completed the payment
       </button>
       
@@ -2546,15 +2551,13 @@
       payload += f('00', '01');
       payload += f('01', '12');
       payload += f('29', merchant);
+      payload += '5802TH';
       payload += f('53', '764');
-      if (amount > 0) {
-        payload += f('54', amount.toFixed(2));
-      }
-      payload += f('58', 'TH');
-      payload += f('63', '0000');
+      payload += f('54', amount.toFixed(2));
+      payload += '6304';
 
       let checksum = crc16(payload);
-      payload = payload.slice(0, -4) + checksum;
+      payload += checksum;
 
       return payload;
     }
@@ -2584,6 +2587,9 @@
       
       document.getElementById('qrCodeContainer').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2 });
 
+      document.getElementById('paymentConfirmCheck').checked = false;
+      document.getElementById('confirmPaymentBtn').disabled = true;
+      document.getElementById('confirmPaymentBtn').textContent = 'I have completed the payment';
       document.getElementById('paypalModal').style.display = 'flex';
     }
 

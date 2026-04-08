@@ -2734,23 +2734,34 @@
         const amount = currentAmount;
         const paymentType = selectedPaymentType === 'deposit' ? 'DEPOSIT' : 'FULL PAYMENT';
 
-        const emailBody = `NEW BOOKING PAYMENT\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nPromptPay\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}`;
-
-        const slipFile = document.getElementById('slipUpload').files[0];
-        const formData = new FormData();
-        formData.append('subject', `PAID! ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB (PromptPay)`);
-        formData.append('message', emailBody);
-        formData.append('email', bookingData.email);
-        formData.append('name', bookingData.name);
-        if (slipFile) {
-          formData.append('attachment', slipFile, slipFile.name);
-        }
+        const emailBody = `NEW BOOKING PAYMENT\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nPromptPay\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}\n\n(Payment slip sent in a separate email)`;
 
         await fetch('https://formspree.io/f/mzdgawqp', {
           method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: formData
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            subject: `PAID! ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB (PromptPay)`,
+            message: emailBody,
+            email: bookingData.email,
+            name: bookingData.name
+          })
         });
+
+        const slipFile = document.getElementById('slipUpload').files[0];
+        if (slipFile) {
+          const slipForm = new FormData();
+          slipForm.append('_subject', `SLIP - ${bookingData.name} - ${amount.toLocaleString()} THB`);
+          slipForm.append('name', bookingData.name);
+          slipForm.append('email', bookingData.email);
+          slipForm.append('message', `Payment slip for ${paymentType} ${amount.toLocaleString()} THB`);
+          slipForm.append('file', slipFile, slipFile.name);
+          
+          await fetch('https://formspree.io/f/mzdgawqp', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: slipForm
+          });
+        }
 
         closePaymentModals();
         document.getElementById('successDetail').textContent = 'Payment slip received — ' + paymentType + ' ฿' + amount.toLocaleString();

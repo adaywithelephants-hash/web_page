@@ -2521,37 +2521,40 @@
     }
 
     function generatePromptPayPayload(phone, amount) {
-      function formatField(id, value) {
-        return id + String(value.length).padStart(2, '0') + value;
-      }
+      function f(id, val) { return id + String(val.length).padStart(2,'0') + val; }
       function crc16(str) {
         let crc = 0xFFFF;
         for (let i = 0; i < str.length; i++) {
           crc ^= str.charCodeAt(i) << 8;
           for (let j = 0; j < 8; j++) {
-            crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+            crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
             crc &= 0xFFFF;
           }
         }
         return crc.toString(16).toUpperCase().padStart(4, '0');
       }
 
-      let phoneNum = phone.replace(/^0/, '66');
-      let merchantAccount = formatField('00', 'A000000677010111') + formatField('01', '00' + phoneNum) + formatField('02', '0625151491');
-      
-      merchantAccount = formatField('00', 'A000000677010111') + formatField('01', '00' + phoneNum);
+      let mobile = phone.replace(/\D/g, '');
+      if (mobile.startsWith('0')) {
+        mobile = '66' + mobile.substring(1);
+      }
+      mobile = '00' + mobile;
+
+      let merchant = f('00', 'A000000677010111') + f('01', mobile);
 
       let payload = '';
-      payload += formatField('00', '01');
-      payload += formatField('01', '12');
-      payload += formatField('29', merchantAccount);
-      payload += formatField('53', '764');
-      payload += formatField('54', amount.toFixed(2));
-      payload += formatField('58', 'TH');
-      payload += formatField('63', '');
-      
-      let crc = crc16(payload);
-      payload = payload.slice(0, -4) + crc;
+      payload += f('00', '01');
+      payload += f('01', '12');
+      payload += f('29', merchant);
+      payload += f('53', '764');
+      if (amount > 0) {
+        payload += f('54', amount.toFixed(2));
+      }
+      payload += f('58', 'TH');
+      payload += f('63', '0000');
+
+      let checksum = crc16(payload);
+      payload = payload.slice(0, -4) + checksum;
 
       return payload;
     }

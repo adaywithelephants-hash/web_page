@@ -6,7 +6,7 @@
   <title>A Day in Chiangmai | Elephant Tours</title>
   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://www.paypal.com/sdk/js?client-id=Aeiumjsj90kuX2tHy9z1UH3fOpkm9OdpkhM4t2dJSwdvzay4seX50fCTouZBiTpNrxi0OUmbsW29Ryod&currency=USD"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { 
@@ -1268,6 +1268,27 @@
       min-height: 150px;
     }
 
+    .confirm-payment-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+    .confirm-payment-btn:hover {
+      background: #3d8b40;
+    }
+    .confirm-payment-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
     .qr-modal {
       max-width: 380px;
     }
@@ -2313,20 +2334,31 @@
   </div>
 
   <div id="paypalModal" class="modal-overlay" style="display: none;">
-    <div class="modal payment-modal">
+    <div class="modal payment-modal qr-modal">
       <button class="close-btn" onclick="closePaymentModals()">&times;</button>
-      <h2>Complete Payment</h2>
-      <p class="modal-subtitle">Pay securely with PayPal</p>
+      <h2>Scan to Pay</h2>
+      <p class="modal-subtitle">PromptPay QR Code</p>
       
       <div class="payment-summary">
         <span>Total:</span>
         <span id="paypalTotal">฿0</span>
       </div>
-      <p class="usd-note" id="usdAmount">(≈ $0.00 USD)</p>
       
-      <div id="paypal-button-container"></div>
+      <div class="qr-display">
+        <div id="qrCodeContainer"></div>
+      </div>
       
-      <p class="paypal-note">You can pay with PayPal account or Credit/Debit Card</p>
+      <p class="qr-instruction">Scan with your banking app to pay instantly</p>
+      
+      <div class="qr-status">
+        <span>After payment, tap the button below</span>
+      </div>
+      
+      <button class="confirm-payment-btn" id="confirmPaymentBtn" onclick="confirmPayment()">
+        I have completed the payment
+      </button>
+      
+      <p class="paypal-note">Supported by all Thai banking apps</p>
     </div>
   </div>
 
@@ -2488,8 +2520,41 @@
       document.getElementById('loadingOverlay').style.display = 'none';
     }
 
-    let selectedPaymentType = '';
-    let currentAmount = 0;
+    function generatePromptPayPayload(phone, amount) {
+      function formatField(id, value) {
+        return id + String(value.length).padStart(2, '0') + value;
+      }
+      function crc16(str) {
+        let crc = 0xFFFF;
+        for (let i = 0; i < str.length; i++) {
+          crc ^= str.charCodeAt(i) << 8;
+          for (let j = 0; j < 8; j++) {
+            crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+            crc &= 0xFFFF;
+          }
+        }
+        return crc.toString(16).toUpperCase().padStart(4, '0');
+      }
+
+      let phoneNum = phone.replace(/^0/, '66');
+      let merchantAccount = formatField('00', 'A000000677010111') + formatField('01', '00' + phoneNum) + formatField('02', '0625151491');
+      
+      merchantAccount = formatField('00', 'A000000677010111') + formatField('01', '00' + phoneNum);
+
+      let payload = '';
+      payload += formatField('00', '01');
+      payload += formatField('01', '12');
+      payload += formatField('29', merchantAccount);
+      payload += formatField('53', '764');
+      payload += formatField('54', amount.toFixed(2));
+      payload += formatField('58', 'TH');
+      payload += formatField('63', '');
+      
+      let crc = crc16(payload);
+      payload = payload.slice(0, -4) + crc;
+
+      return payload;
+    }
 
     function selectPaymentAmount(amountType) {
       selectedPaymentType = amountType;
@@ -2506,56 +2571,67 @@
         currentAmount = (adults * packagePrice.adult) + (children * packagePrice.child);
       }
 
-      const exchangeRate = 35;
-      const amountUSD = (currentAmount / exchangeRate).toFixed(2);
-
       document.getElementById('paypalTotal').textContent = `฿${currentAmount.toLocaleString()}`;
-      document.getElementById('usdAmount').textContent = `(≈ $${amountUSD} USD)`;
+
+      const payload = generatePromptPayPayload('0625151491', currentAmount);
       
-      document.getElementById('paypal-button-container').innerHTML = '';
+      const qr = qrcode(0, 'M');
+      qr.addData(payload);
+      qr.make();
       
-      paypal.Buttons({
-        createOrder: async function() {
-          const response = await fetch('/api/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              paymentType: selectedPaymentType,
-              customerEmail: bookingData.email,
-              customerName: bookingData.name,
-              phone: bookingData.phone,
-              tourPackage: bookingData.tourPackage,
-              tourDate: bookingData.tourDate,
-              adults: bookingData.adults,
-              children: bookingData.children,
-              country: bookingData.country,
-              hotel: bookingData.hotel,
-              message: bookingData.message
-            })
-          });
-          const data = await response.json();
-          if (data.orderID) {
-            window._paypalMeta = data.meta || '';
-            return data.orderID;
-          } else {
-            throw new Error(data.error || 'Failed to create order');
-          }
-        },
-        onApprove: function(data) {
-          document.getElementById('paypalModal').style.display = 'none';
-          document.getElementById('loadingOverlay').style.display = 'flex';
-          window.location.href = `/api/capture-order?token=${data.orderID}&meta=${encodeURIComponent(window._paypalMeta || '')}`;
-        },
-        onError: function(err) {
-          console.error('PayPal error:', err);
-          alert('เกิดข้อผิดพลาด กรุณาติดต่อเราทาง WhatsApp +66909962308');
-        },
-        onCancel: function() {
-          console.log('Payment cancelled');
-        }
-      }).render('#paypal-button-container');
+      document.getElementById('qrCodeContainer').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2 });
 
       document.getElementById('paypalModal').style.display = 'flex';
+    }
+
+    async function confirmPayment() {
+      const btn = document.getElementById('confirmPaymentBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending confirmation...';
+
+      try {
+        const amount = currentAmount;
+        const paymentType = selectedPaymentType === 'deposit' ? 'DEPOSIT' : 'FULL PAYMENT';
+
+        const emailBody = `NEW BOOKING PAYMENT\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nPromptPay\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}`;
+
+        await fetch('https://formspree.io/f/mzdgawqp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            subject: `PAID! ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB (PromptPay)`,
+            message: emailBody,
+            email: bookingData.email,
+            name: bookingData.name
+          })
+        });
+
+        const receiptParams = new URLSearchParams({
+          name: bookingData.name || '',
+          email: bookingData.email || '',
+          phone: bookingData.phone || '',
+          package: bookingData.tourPackage || '',
+          date: bookingData.tourDate || '',
+          adults: bookingData.adults || '0',
+          children: bookingData.children || '0',
+          hotel: bookingData.hotel || '',
+          amount: amount.toString(),
+          type: selectedPaymentType || 'deposit',
+          method: 'promptpay',
+          charge: 'PP' + Date.now().toString(36)
+        });
+
+        window.location.href = `/receipt.html?${receiptParams.toString()}`;
+
+      } catch (error) {
+        console.error('Error:', error);
+        btn.disabled = false;
+        btn.textContent = 'I have completed the payment';
+        alert('Error sending confirmation. Please contact us via WhatsApp +66909962308');
+      }
     }
 
     const bookingForm = document.getElementById('bookingForm');

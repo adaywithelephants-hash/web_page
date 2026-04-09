@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     `;
 
     const adminPayload = {
-      from: 'A Day in Chiangmai <onboarding@resend.dev>',
+      from: 'A Day in Chiangmai <booking@adaywithelephants.com>',
       to: [ADMIN_EMAIL],
       subject: subject,
       html: adminHtml,
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'A Day in Chiangmai <onboarding@resend.dev>',
+          from: 'A Day in Chiangmai <booking@adaywithelephants.com>',
           to: [customerEmail],
           subject: 'Booking Confirmed - A Day in Chiangmai',
           html: customerHtml,

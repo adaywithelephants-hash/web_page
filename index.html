@@ -2696,18 +2696,20 @@
         const amount = currentAmount;
         const paymentType = selectedPaymentType === 'deposit' ? 'DEPOSIT' : 'FULL PAYMENT';
 
-        const emailBody = `INVOICE REQUEST - CREDIT CARD\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\n\nPlease send invoice to: ${bookingData.email}\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}`;
+        const bookingDetails = `INVOICE REQUEST - CREDIT CARD\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nSend invoice to: ${bookingData.email}\n\nCustomer: ${bookingData.name}\nEmail: ${bookingData.email}\nPhone: ${bookingData.phone || '-'}\nCountry: ${bookingData.country || '-'}\n\nPackage: ${bookingData.tourPackage}\nDate: ${bookingData.tourDate}\nAdults: ${bookingData.adults}\nChildren: ${bookingData.children}\nHotel: ${bookingData.hotel || '-'}\n\nSpecial Requests:\n${bookingData.message || 'None'}`;
 
-        await fetch('https://formspree.io/f/mzdgawqp', {
+        const response = await fetch('/api/send-email', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             subject: `INVOICE REQUEST - ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB`,
-            message: emailBody,
-            email: bookingData.email,
-            name: bookingData.name
+            bookingDetails: bookingDetails,
+            customerEmail: bookingData.email,
+            customerName: bookingData.name
           })
         });
+
+        if (!response.ok) throw new Error('Failed to send');
 
         closePaymentModals();
         document.getElementById('successDetail').textContent = 'An invoice will be sent to ' + bookingData.email;
@@ -2734,34 +2736,24 @@
         const amount = currentAmount;
         const paymentType = selectedPaymentType === 'deposit' ? 'DEPOSIT' : 'FULL PAYMENT';
 
-        const emailBody = `NEW BOOKING PAYMENT\n\n${paymentType}\nAmount: ${amount.toLocaleString()} THB\nPromptPay\n\nCustomer Information:\n- Name: ${bookingData.name}\n- Email: ${bookingData.email}\n- Phone: ${bookingData.phone || 'Not specified'}\n- Country: ${bookingData.country || 'Not specified'}\n\nTour Details:\n- Package: ${bookingData.tourPackage}\n- Date: ${bookingData.tourDate}\n- Adults: ${bookingData.adults}\n- Children: ${bookingData.children}\n\nHotel: ${bookingData.hotel || 'Not specified'}\n\nSpecial Requests:\n${bookingData.message || 'None'}\n\n(Payment slip sent in a separate email)`;
+        const bookingDetails = `${paymentType}\nAmount: ${amount.toLocaleString()} THB\nMethod: PromptPay\n\nCustomer: ${bookingData.name}\nEmail: ${bookingData.email}\nPhone: ${bookingData.phone || '-'}\nCountry: ${bookingData.country || '-'}\n\nPackage: ${bookingData.tourPackage}\nDate: ${bookingData.tourDate}\nAdults: ${bookingData.adults}\nChildren: ${bookingData.children}\nHotel: ${bookingData.hotel || '-'}\n\nSpecial Requests:\n${bookingData.message || 'None'}`;
 
-        await fetch('https://formspree.io/f/mzdgawqp', {
+        const slipFile = document.getElementById('slipUpload').files[0];
+
+        const response = await fetch('/api/send-email', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             subject: `PAID! ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB (PromptPay)`,
-            message: emailBody,
-            email: bookingData.email,
-            name: bookingData.name
+            bookingDetails: bookingDetails,
+            customerEmail: bookingData.email,
+            customerName: bookingData.name,
+            slipBase64: slipBase64,
+            slipFileName: slipFile ? slipFile.name : 'slip.jpg'
           })
         });
 
-        const slipFile = document.getElementById('slipUpload').files[0];
-        if (slipFile) {
-          const slipForm = new FormData();
-          slipForm.append('_subject', `SLIP - ${bookingData.name} - ${amount.toLocaleString()} THB`);
-          slipForm.append('name', bookingData.name);
-          slipForm.append('email', bookingData.email);
-          slipForm.append('message', `Payment slip for ${paymentType} ${amount.toLocaleString()} THB`);
-          slipForm.append('file', slipFile, slipFile.name);
-          
-          await fetch('https://formspree.io/f/mzdgawqp', {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: slipForm
-          });
-        }
+        if (!response.ok) throw new Error('Failed to send email');
 
         closePaymentModals();
         document.getElementById('successDetail').textContent = 'Payment slip received — ' + paymentType + ' ฿' + amount.toLocaleString();

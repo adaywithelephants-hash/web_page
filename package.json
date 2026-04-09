@@ -1,7 +1,5 @@
 {
   "name": "elephant-tour-website",
   "version": "1.0.0",
-  "dependencies": {
-    "@paypal/checkout-server-sdk": "^1.0.3"
-  }
+  "dependencies": {}
 }

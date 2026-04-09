@@ -2709,7 +2709,11 @@
           })
         });
 
-        if (!response.ok) throw new Error('Failed to send');
+        const result = await response.json();
+        if (!response.ok) {
+          console.error('API error:', result);
+          throw new Error(result.error || 'Failed to send');
+        }
 
         closePaymentModals();
         document.getElementById('successDetail').textContent = 'An invoice will be sent to ' + bookingData.email;
@@ -2753,7 +2757,11 @@
           })
         });
 
-        if (!response.ok) throw new Error('Failed to send email');
+        const result = await response.json();
+        if (!response.ok) {
+          console.error('API error:', result);
+          throw new Error(result.error || 'Failed to send email');
+        }
 
         closePaymentModals();
         document.getElementById('successDetail').textContent = 'Payment slip received — ' + paymentType + ' ฿' + amount.toLocaleString();

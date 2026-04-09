@@ -10,7 +10,12 @@ export default async function handler(req, res) {
     const { subject, bookingDetails, customerEmail, customerName, slipBase64, slipFileName } = req.body;
 
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    const ADMIN_EMAIL = 'wongchapat.james@gmail.com';
+    const ADMIN_EMAIL = 'adaywithelephants@gmail.com';
+
+    if (!RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not set');
+      return res.status(500).json({ error: 'RESEND_API_KEY not configured' });
+    }
 
     const attachments = [];
     if (slipBase64) {
@@ -29,20 +34,33 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    await fetch('https://api.resend.com/emails', {
+    const adminPayload = {
+      from: 'A Day in Chiangmai <onboarding@resend.dev>',
+      to: [ADMIN_EMAIL],
+      subject: subject,
+      html: adminHtml,
+    };
+
+    if (attachments.length > 0) {
+      adminPayload.attachments = attachments;
+    }
+
+    const adminRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: 'A Day in Chiangmai <onboarding@resend.dev>',
-        to: [ADMIN_EMAIL],
-        subject: subject,
-        html: adminHtml,
-        attachments: attachments,
-      }),
+      body: JSON.stringify(adminPayload),
     });
+
+    const adminResult = await adminRes.json();
+    console.log('Admin email result:', JSON.stringify(adminResult));
+
+    if (!adminRes.ok) {
+      console.error('Admin email failed:', JSON.stringify(adminResult));
+      return res.status(500).json({ error: 'Failed to send admin email', details: adminResult });
+    }
 
     if (customerEmail) {
       const customerHtml = `
@@ -69,7 +87,7 @@ export default async function handler(req, res) {
         </div>
       `;
 
-      await fetch('https://api.resend.com/emails', {
+      const custRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${RESEND_API_KEY}`,
@@ -82,9 +100,12 @@ export default async function handler(req, res) {
           html: customerHtml,
         }),
       });
+
+      const custResult = await custRes.json();
+      console.log('Customer email result:', JSON.stringify(custResult));
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, adminEmail: adminResult });
 
   } catch (error) {
     console.error('Email error:', error);

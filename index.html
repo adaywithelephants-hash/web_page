@@ -2667,7 +2667,7 @@
       if (method === 'promptpay') {
         document.getElementById('paypalTotal').textContent = `฿${currentAmount.toLocaleString()}`;
 
-        const payload = generatePromptPayPayload('0625151491', currentAmount);
+        const payload = generatePromptPayPayload('0963012286', currentAmount);
         const qr = qrcode(0, 'M');
         qr.addData(payload);
         qr.make();

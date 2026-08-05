@@ -1,0 +1,58 @@
+{
+  "site": {
+    "lang": "en",
+    "title": "Best Elephant Sanctuary Chiang Mai | Ethical Elephant Tour Thailand - A Day in Chiangmai",
+    "description": "Looking for the best elephant sanctuary in Chiang Mai? Our ethical elephant sanctuary in Thailand offers half day and full day Chiang Mai elephant tours — feed, walk and bathe elephants in their natural habitat. Book your ethical elephant experience today!",
+    "keywords": "best elephant sanctuary chiang mai, ethical elephant sanctuary thailand, chiang mai elephant tour, elephant sanctuary chiang mai, ethical elephant tour, elephant experience chiang mai",
+    "robots": "index, follow",
+    "canonical": "https://www.adaywithelephants.com/",
+    "favicon": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png"
+  },
+  "openGraph": {
+    "title": "Best Elephant Sanctuary Chiang Mai | Ethical Elephant Tour Thailand",
+    "description": "Looking for the best elephant sanctuary in Chiang Mai? Our ethical elephant sanctuary in Thailand offers Chiang Mai elephant tours — feed, walk and bathe elephants. Book now!",
+    "url": "https://www.adaywithelephants.com/",
+    "type": "website",
+    "image": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p8.jpg",
+    "siteName": "A Day in Chiangmai - Best Elephant Sanctuary"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Best Elephant Sanctuary Chiang Mai | Ethical Elephant Tour Thailand",
+    "description": "Looking for the best elephant sanctuary in Chiang Mai? Ethical elephant tours in Thailand — feed, walk and bathe elephants. Book today!",
+    "image": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p8.jpg"
+  },
+  "jsonLd": {
+    "type": "TouristAttraction",
+    "name": "A Day in Chiangmai - Best Elephant Sanctuary Chiang Mai",
+    "description": "The best ethical elephant sanctuary in Chiang Mai, Thailand. Offering half day and full day Chiang Mai elephant tours with feeding, walking and bathing experiences in a natural habitat.",
+    "url": "https://www.adaywithelephants.com/",
+    "image": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/p8.jpg",
+    "addressLocality": "Chiang Mai",
+    "addressCountry": "TH",
+    "telephone": "+66909962308",
+    "priceRange": "1,600 - 2,500 THB"
+  },
+  "images": {
+    "nav-logo": "Logo",
+    "feature": "Best elephant sanctuary Chiang Mai - ethical elephant experience",
+    "gallery-1": "Chiang Mai elephant tour - feeding elephants",
+    "gallery-2": "Ethical elephant sanctuary Thailand - walking with elephants",
+    "gallery-3": "Best elephant sanctuary Chiang Mai - elephant bathing",
+    "gallery-4": "Elephant experience",
+    "gallery-5": "Elephant experience",
+    "gallery-6": "Elephant experience",
+    "gallery-7": "Elephant experience",
+    "info": "Elephant experience",
+    "review-1": "Sarah",
+    "review-2": "James",
+    "review-3": "Emma",
+    "qr-whatsapp": "Add WhatsApp",
+    "qr-line": "Add Line",
+    "footer-logo": "Logo"
+  },
+  "receipt": {
+    "title": "Payment Receipt - A Day With Elephants",
+    "favicon": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png"
+  }
+}

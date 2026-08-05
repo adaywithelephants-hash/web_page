@@ -3,6 +3,19 @@
     "api/send-email.js": {
       "memory": 256,
       "maxDuration": 10
+    },
+    "api/seo.js": {
+      "memory": 256,
+      "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/seo-config.json", "destination": "/api/seo-config-blocked" }
+  ],
+  "headers": [
+    {
+      "source": "/seo-admin.html",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
 }

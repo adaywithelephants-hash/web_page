@@ -7,10 +7,15 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { subject, bookingDetails, customerEmail, customerName, slipBase64, slipFileName } = req.body;
+    const { subject, bookingDetails, customerEmail, customerName, slipBase64, slipFileName, testMode } = req.body;
 
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
     const ADMIN_EMAIL = 'adaywithelephants@gmail.com';
+    const TEST_EMAIL = 'wongchapat.james@gmail.com';
+
+    // Test mode: never touch the real admin inbox, and tag every subject.
+    const adminRecipient = testMode ? TEST_EMAIL : ADMIN_EMAIL;
+    const tag = testMode ? '[TEST] ' : '';
 
     if (!RESEND_API_KEY) {
       console.error('RESEND_API_KEY is not set');
@@ -28,6 +33,7 @@ export default async function handler(req, res) {
 
     const adminHtml = `
       <div style="font-family:Arial,sans-serif;max-width:600px;">
+        ${testMode ? '<div style="background:#FFF3CD;border:1px solid #FFB74D;padding:10px;border-radius:8px;margin-bottom:12px;color:#8B6914;font-weight:bold;">TEST MODE — this is a test email, not a real booking.</div>' : ''}
         <h2 style="color:#4CAF50;">New Booking Payment</h2>
         <pre style="background:#f5f5f5;padding:15px;border-radius:8px;font-size:14px;line-height:1.6;">${bookingDetails}</pre>
         ${slipBase64 ? '<p style="color:#888;font-size:13px;">Payment slip attached to this email.</p>' : ''}
@@ -36,8 +42,8 @@ export default async function handler(req, res) {
 
     const adminPayload = {
       from: 'A Day in Chiangmai <booking@adaywithelephants.com>',
-      to: [ADMIN_EMAIL],
-      subject: subject,
+      to: [adminRecipient],
+      subject: tag + subject,
       html: adminHtml,
     };
 
@@ -62,9 +68,12 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to send admin email', details: adminResult });
     }
 
+    let customerResult = null;
+
     if (customerEmail) {
       const customerHtml = `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          ${testMode ? '<div style="background:#FFF3CD;border:1px solid #FFB74D;padding:10px;border-radius:8px;margin-bottom:12px;color:#8B6914;font-weight:bold;text-align:center;">TEST MODE — this is a test email, not a real booking.</div>' : ''}
           <div style="background:#8B7355;padding:20px;border-radius:12px 12px 0 0;text-align:center;">
             <h1 style="color:white;margin:0;font-size:22px;">A Day in Chiangmai</h1>
             <p style="color:#ddd;margin:5px 0 0;">Elephant Sanctuary Experience</p>
@@ -95,17 +104,28 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           from: 'A Day in Chiangmai <booking@adaywithelephants.com>',
-          to: [customerEmail],
-          subject: 'Booking Confirmed - A Day in Chiangmai',
+          to: [testMode ? TEST_EMAIL : customerEmail],
+          subject: tag + 'Booking Confirmed - A Day in Chiangmai',
           html: customerHtml,
         }),
       });
 
-      const custResult = await custRes.json();
-      console.log('Customer email result:', JSON.stringify(custResult));
+      customerResult = await custRes.json();
+      console.log('Customer email result:', JSON.stringify(customerResult));
+
+      // Customer send is best-effort normally, but a test run must surface the failure.
+      if (testMode && !custRes.ok) {
+        return res.status(500).json({ error: 'Failed to send customer email', details: customerResult });
+      }
     }
 
-    return res.status(200).json({ success: true, adminEmail: adminResult });
+    return res.status(200).json({
+      success: true,
+      testMode: !!testMode,
+      sentTo: { admin: adminRecipient, customer: customerEmail ? (testMode ? TEST_EMAIL : customerEmail) : null },
+      adminEmail: adminResult,
+      customerEmail: customerResult,
+    });
 
   } catch (error) {
     console.error('Email error:', error);

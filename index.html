@@ -2299,7 +2299,12 @@
         <span>⚠️</span>
         <p>If booking later than 10:30 PM, please contact us via WhatsApp +66909962308. Your booking may be adjusted based on availability.</p>
       </div>
-      
+
+      <div id="testModeBanner" style="display:none;background:#FFF3CD;border:2px solid #FFB74D;border-radius:10px;padding:0.8rem 1rem;margin-bottom:1rem;">
+        <p style="margin:0;color:#8B6914;font-weight:700;font-size:0.95rem;">🧪 TEST MODE</p>
+        <p style="margin:4px 0 0;color:#8B6914;font-size:0.85rem;line-height:1.5;">Validation is off and no slip is required. Emails go to <strong>wongchapat.james@gmail.com</strong> only — the real inbox is not touched.</p>
+      </div>
+
       <form id="bookingForm">
         <input type="hidden" name="form_type" value="booking">
         <div class="form-group">
@@ -2573,6 +2578,7 @@
       document.getElementById('modal').classList.add('active');
       document.getElementById('tourSelect').value = tourName;
       document.body.style.overflow = 'hidden';
+      refreshTestMode();
     }
     
     function closeModal() {
@@ -2649,6 +2655,12 @@
 
     let bookingData = {};
     let selectedPaymentMethod = '';
+
+    // Typing this as the Full Name turns on test mode: no validation, no slip,
+    // and every email is redirected to TEST_EMAIL by the API.
+    const TEST_NAME = 'jamestesting';
+    const TEST_EMAIL = 'wongchapat.james@gmail.com';
+    let isTestMode = false;
 
     const packagePrices = {
       'Half Day Morning - 1,600 THB': { adult: 1600, child: 1000 },
@@ -2751,8 +2763,8 @@
         slipBase64 = '';
         document.getElementById('slipUpload').value = '';
         document.getElementById('slipPreview').style.display = 'none';
-        document.getElementById('confirmPaymentBtn').disabled = true;
-        document.getElementById('confirmPaymentBtn').textContent = 'Submit Payment & Slip';
+        document.getElementById('confirmPaymentBtn').disabled = !isTestMode;
+        document.getElementById('confirmPaymentBtn').textContent = isTestMode ? 'Submit (TEST — no slip needed)' : 'Submit Payment & Slip';
         document.getElementById('paypalModal').style.display = 'flex';
 
       } else {
@@ -2780,7 +2792,8 @@
             subject: `INVOICE REQUEST - ${paymentType} - ${bookingData.name} - ${amount.toLocaleString()} THB`,
             bookingDetails: bookingDetails,
             customerEmail: bookingData.email,
-            customerName: bookingData.name
+            customerName: bookingData.name,
+            testMode: isTestMode
           })
         });
 
@@ -2791,7 +2804,9 @@
         }
 
         closePaymentModals();
-        document.getElementById('successDetail').textContent = 'An invoice will be sent to ' + bookingData.email;
+        document.getElementById('successDetail').textContent = isTestMode
+          ? '🧪 TEST — admin copy sent to ' + result.sentTo.admin + ', customer copy to ' + result.sentTo.customer
+          : 'An invoice will be sent to ' + bookingData.email;
         document.getElementById('successModal').style.display = 'flex';
 
       } catch (error) {
@@ -2802,7 +2817,7 @@
     }
 
     async function confirmPayment() {
-      if (!slipBase64) {
+      if (!slipBase64 && !isTestMode) {
         alert('Please upload your payment slip first');
         return;
       }
@@ -2828,7 +2843,8 @@
             customerEmail: bookingData.email,
             customerName: bookingData.name,
             slipBase64: slipBase64,
-            slipFileName: slipFile ? slipFile.name : 'slip.jpg'
+            slipFileName: slipFile ? slipFile.name : 'slip.jpg',
+            testMode: isTestMode
           })
         });
 
@@ -2839,7 +2855,9 @@
         }
 
         closePaymentModals();
-        document.getElementById('successDetail').textContent = 'Payment slip received — ' + paymentType + ' ฿' + amount.toLocaleString();
+        document.getElementById('successDetail').textContent = isTestMode
+          ? '🧪 TEST — admin copy sent to ' + result.sentTo.admin + ', customer copy to ' + result.sentTo.customer
+          : 'Payment slip received — ' + paymentType + ' ฿' + amount.toLocaleString();
         document.getElementById('successModal').style.display = 'flex';
 
       } catch (error) {
@@ -2850,11 +2868,24 @@
     }
 
     const bookingForm = document.getElementById('bookingForm');
+
+    // The browser blocks submit on `required` fields before the submit event ever
+    // fires, so test mode has to disarm validation as the name is typed.
+    const nameInput = bookingForm.querySelector('input[name="name"]');
+    function refreshTestMode() {
+      isTestMode = nameInput.value.trim().toLowerCase() === TEST_NAME;
+      bookingForm.noValidate = isTestMode;
+      document.getElementById('testModeBanner').style.display = isTestMode ? 'block' : 'none';
+    }
+    nameInput.addEventListener('input', refreshTestMode);
+
     bookingForm.addEventListener('submit', async function(e) {
       e.preventDefault();
-      
+
+      refreshTestMode();
+
       const formData = new FormData(bookingForm);
-      
+
       bookingData = {
         name: formData.get('name'),
         email: formData.get('email'),
@@ -2867,6 +2898,20 @@
         hotel: formData.get('hotel'),
         message: formData.get('message')
       };
+
+      if (isTestMode) {
+        // Fill in whatever was left blank so the payment flow has real numbers to work with.
+        bookingData.email = TEST_EMAIL;
+        bookingData.phone = bookingData.phone || '+66909962308';
+        bookingData.tourPackage = bookingData.tourPackage || 'Half Day Morning - 1,600 THB';
+        bookingData.tourDate = bookingData.tourDate || new Date().toISOString().slice(0, 10);
+        bookingData.adults = bookingData.adults || '1';
+        bookingData.children = bookingData.children || '0';
+        bookingData.country = bookingData.country || 'TEST';
+        bookingData.hotel = bookingData.hotel || 'TEST — no pickup';
+        bookingData.message = bookingData.message || 'TEST RUN — please ignore.';
+        document.getElementById('tourSelect').value = bookingData.tourPackage;
+      }
 
       const adults = parseInt(bookingData.adults) || 0;
       const children = parseInt(bookingData.children) || 0;

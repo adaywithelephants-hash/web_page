@@ -181,8 +181,17 @@ export const __test__ = {};
 
 // ---------------------------------------------------------------- github
 
+/**
+ * Pasting a token into the Vercel dashboard often drags a trailing newline along,
+ * and quoting the value is an easy habit to carry over from .env files. Either one
+ * corrupts the header and comes back as "Bad credentials", so clean both off.
+ */
+function readToken() {
+  return (process.env.GITHUB_TOKEN || '').trim().replace(/^["']|["']$/g, '').trim();
+}
+
 async function gh(path, options = {}) {
-  const token = process.env.GITHUB_TOKEN;
+  const token = readToken();
   if (!token) throw new Error('GITHUB_TOKEN is not configured in Vercel');
 
   const res = await fetch(`https://api.github.com${path}`, {
@@ -201,9 +210,103 @@ async function gh(path, options = {}) {
   const data = await res.json().catch(() => null);
   if (!res.ok) {
     const detail = data && data.message ? data.message : `HTTP ${res.status}`;
+    if (res.status === 401) {
+      throw new Error(
+        'GitHub rejected the token (Bad credentials). Open /api/seo?check=1 to see exactly what is wrong.',
+      );
+    }
+    if (res.status === 403) {
+      throw new Error(
+        `GitHub refused the request (${detail}). The token is valid but lacks "Contents: Read and write" on this ` +
+        'repository, or a fine-grained token is still waiting for owner approval. See /api/seo?check=1',
+      );
+    }
     throw new Error(`GitHub: ${detail}`);
   }
   return data;
+}
+
+/**
+ * Unauthenticated on purpose: a broken token makes login impossible, so this has
+ * to work without one. It reveals no token characters — only its shape.
+ */
+async function diagnose() {
+  const raw = process.env.GITHUB_TOKEN;
+  const token = readToken();
+
+  const report = {
+    repo: `${OWNER}/${REPO}`,
+    branch: BRANCH,
+    token: {
+      configured: !!raw,
+      length: token.length,
+      hadSurroundingWhitespace: !!raw && raw !== raw.trim(),
+      hadSurroundingQuotes: /^["']|["']$/.test((raw || '').trim()),
+      kind: token.startsWith('github_pat_') ? 'fine-grained (github_pat_)'
+        : token.startsWith('ghp_') ? 'classic (ghp_)'
+        : token.startsWith('ghs_') ? 'app installation (ghs_)'
+        : token ? 'unrecognised prefix'
+        : 'none',
+    },
+    checks: {},
+    verdict: '',
+  };
+
+  if (!token) {
+    report.verdict = 'GITHUB_TOKEN is not set. Add it in Vercel → Settings → Environment Variables, then redeploy.';
+    return report;
+  }
+
+  const call = async (path) => {
+    const res = await fetch(`https://api.github.com${path}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'adaywithelephants-seo-admin',
+      },
+    });
+    const body = await res.json().catch(() => null);
+    return { status: res.status, body };
+  };
+
+  const who = await call('/user');
+  report.checks.authenticate = who.status === 200
+    ? { ok: true, login: who.body.login }
+    : { ok: false, status: who.status, message: who.body && who.body.message };
+
+  if (who.status === 401) {
+    const expected = token.startsWith('github_pat_') ? 93 : token.startsWith('ghp_') ? 40 : 0;
+    report.verdict =
+      expected && token.length !== expected
+        ? `This looks truncated — a ${report.token.kind} token is normally ${expected} characters but this one is ${token.length}. Copy the whole value and update GITHUB_TOKEN in Vercel, then redeploy.`
+        : 'GitHub does not recognise this token — most likely expired or revoked. Generate a new one, update GITHUB_TOKEN in Vercel, then redeploy.';
+    return report;
+  }
+
+  const repo = await call(`/repos/${OWNER}/${REPO}`);
+  report.checks.repository = repo.status === 200
+    ? { ok: true, private: repo.body.private, canPush: !!(repo.body.permissions && repo.body.permissions.push) }
+    : { ok: false, status: repo.status, message: repo.body && repo.body.message };
+
+  if (repo.status !== 200) {
+    report.verdict = `The token authenticates but cannot see ${OWNER}/${REPO}. Make sure its repository access includes this repo (and, for a fine-grained token on an organisation, that an owner approved it).`;
+    return report;
+  }
+  if (!report.checks.repository.canPush) {
+    report.verdict = 'The token can read the repository but not write to it. Set Permissions → Contents: Read and write.';
+    return report;
+  }
+
+  const ref = await call(`/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`);
+  report.checks.branch = ref.status === 200
+    ? { ok: true, head: ref.body.object.sha.slice(0, 7) }
+    : { ok: false, status: ref.status, message: ref.body && ref.body.message };
+
+  report.verdict = ref.status === 200
+    ? 'All good — the token can read and write this repository.'
+    : `Branch "${BRANCH}" was not found. Set GITHUB_BRANCH in Vercel if the default branch has another name.`;
+  return report;
 }
 
 async function readFile(path) {
@@ -300,7 +403,7 @@ async function verifyPassword(password) {
   );
 }
 
-Object.assign(__test__, { hashPassword, buildAuthConfig, safeEqual });
+Object.assign(__test__, { hashPassword, buildAuthConfig, safeEqual, diagnose });
 
 // Best-effort throttle. Serverless instances are not shared, so this slows a
 // single-instance guesser rather than providing a hard global limit.
@@ -330,6 +433,9 @@ function recordFailure(ip) {
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
+      if (req.query && req.query.check) {
+        return res.status(200).json(await diagnose());
+      }
       const raw = await readFile(SEO_PATH);
       if (!raw) return res.status(404).json({ error: 'seo.json not found in the repository' });
       const hasAuthConfig = (await readFile(AUTH_PATH)) !== null;

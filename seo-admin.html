@@ -367,11 +367,51 @@ $('loginForm').addEventListener('submit', async (e) => {
     sessionStorage.setItem('seoAdminPw', password);
     await enterEditor(data.usingDefaultPassword);
   } catch (err) {
-    showMessage($('loginError'), 'err', err.message);
+    // A GitHub-side failure is a setup problem, not a wrong password — say which.
+    if (/token|GitHub|GITHUB_TOKEN/i.test(err.message)) {
+      showMessage($('loginError'), 'err', await describeSetupProblem(err.message));
+    } else {
+      showMessage($('loginError'), 'err', err.message);
+    }
     btn.disabled = false;
     btn.textContent = 'Sign in';
   }
 });
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+async function describeSetupProblem(fallback) {
+  try {
+    const res = await fetch('/api/seo?check=1');
+    const d = await res.json();
+    const line = (label, value) => `<li>${label}: <strong>${escapeHtml(value)}</strong></li>`;
+    let html = '<strong>GitHub connection problem</strong><ul style="margin:0.5rem 0 0 1.1rem;font-size:0.8rem;line-height:1.7;">';
+    html += line('Repository', d.repo + ' (branch ' + d.branch + ')');
+    html += line('GITHUB_TOKEN set', d.token.configured ? 'yes' : 'no');
+    if (d.token.configured) {
+      html += line('Token type', d.token.kind);
+      html += line('Token length', d.token.length + ' characters');
+      if (d.token.hadSurroundingWhitespace) html += line('Stray whitespace', 'yes — stripped automatically');
+      if (d.token.hadSurroundingQuotes) html += line('Wrapped in quotes', 'yes — stripped automatically');
+      if (d.checks.authenticate) {
+        html += line('Authenticates as', d.checks.authenticate.ok ? d.checks.authenticate.login
+          : 'FAILED (' + d.checks.authenticate.status + ' ' + (d.checks.authenticate.message || '') + ')');
+      }
+      if (d.checks.repository) {
+        html += line('Can write to repo', d.checks.repository.ok
+          ? (d.checks.repository.canPush ? 'yes' : 'NO — read only')
+          : 'cannot see the repo (' + d.checks.repository.status + ')');
+      }
+    }
+    html += '</ul><p style="margin:0.7rem 0 0;font-size:0.83rem;">' + escapeHtml(d.verdict) + '</p>';
+    html += '<p style="margin:0.4rem 0 0;font-size:0.78rem;opacity:0.85;">After changing the value in Vercel you must <strong>redeploy</strong> — environment variables only apply to new deployments.</p>';
+    return html;
+  } catch {
+    return escapeHtml(fallback);
+  }
+}
 
 async function enterEditor(usingDefaultPassword) {
   const res = await fetch('/api/seo');

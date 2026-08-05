@@ -9,7 +9,7 @@
     "favicon": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png"
   },
   "openGraph": {
-    "title": "Best Elephant Sanctuary Chiang Mai | Ethical Elephant Tour Thailand",
+    "title": "Best1 Elephant Sanctuary Chiang Mai | Ethical Elephant Tour Thailand",
     "description": "Looking for the best elephant sanctuary in Chiang Mai? Our ethical elephant sanctuary in Thailand offers Chiang Mai elephant tours — feed, walk and bathe elephants. Book now!",
     "url": "https://www.adaywithelephants.com/",
     "type": "website",
@@ -33,6 +33,10 @@
     "telephone": "+66909962308",
     "priceRange": "1,600 - 2,500 THB"
   },
+  "receipt": {
+    "title": "Payment Receipt - A Day With Elephants",
+    "favicon": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png"
+  },
   "images": {
     "nav-logo": "Logo",
     "feature": "Best elephant sanctuary Chiang Mai - ethical elephant experience",
@@ -50,9 +54,5 @@
     "qr-whatsapp": "Add WhatsApp",
     "qr-line": "Add Line",
     "footer-logo": "Logo"
-  },
-  "receipt": {
-    "title": "Payment Receipt - A Day With Elephants",
-    "favicon": "https://raw.githubusercontent.com/adaywithelephants-hash/web_page/refs/heads/main/logo.png"
   }
 }
